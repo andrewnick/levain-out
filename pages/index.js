@@ -1,42 +1,25 @@
 import React from 'react'
 import Head from 'next/head'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { NetworkStatus } from 'apollo-client'
 import gql from 'graphql-tag'
 import withData from '../lib/apollo'
 
 export const ALL_POSTS_QUERY = gql`
   query {
-    pokemon(name: "Pikachu") {
-      id
-      number
+    users {
       name
-      attacks {
-        special {
-          name
-          type
-          damage
-        }
-      }
-      evolutions {
-        id
-        number
-        name
-        weight {
-          minimum
-          maximum
-        }
-        attacks {
-          fast {
-            name
-            type
-            damage
-          }
-        }
-      }
     }
   }
 `
+
+// const SET_LED = gql`
+//   mutation setLed($status: String!) {
+//     setLed(status: $status) {
+//       status
+//     }
+//   }
+// `;
 
 const Home = () => {
   const { loading, error, data, fetchMore, networkStatus } = useQuery(
@@ -45,13 +28,15 @@ const Home = () => {
     }
   )
 
-  console.log(data);
+  // const [setLed, { leddata }] = useMutation(SET_LED);
 
-  if (error) return <ErrorMessage message="Error loading posts." />
+
+  if (error) return <div>Error loading posts.</div>
   if (loading) return <div>Loading</div>
 
-  const { pokemon } = data
+  const { users } = data
 
+  // console.log(leddata);
 
   return (
     <div className="container">
@@ -65,7 +50,10 @@ const Home = () => {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
-        <h2>{pokemon.name}</h2>
+        <h2>{users[0].name}</h2>
+
+        {/* <button onClick={() => setLed('on')}>On</button>
+        <button onClick={() => setLed('off')}>Off</button> */}
 
         <p className="description">
           Get started by editing <code>pages/index.js</code>

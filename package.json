@@ -11,9 +11,15 @@
     "@apollo/react-hooks": "^3.1.5",
     "@apollo/react-ssr": "^3.1.5",
     "apollo-boost": "^0.4.7",
+    "apollo-server-micro": "^2.12.0",
     "graphql": "^15.0.0",
+    "graphql-subscriptions": "^1.1.0",
+    "johnny-five": "^1.4.0",
+    "micro": "^9.3.4",
+    "micro-cors": "^0.1.1",
     "next": "9.3.5",
     "next-apollo": "^3.1.10",
+    "raspi-io": "^11.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }
