@@ -1,6 +1,58 @@
+import React from 'react'
 import Head from 'next/head'
+import { useQuery } from '@apollo/react-hooks'
+import { NetworkStatus } from 'apollo-client'
+import gql from 'graphql-tag'
+import withData from '../lib/apollo'
 
-export default function Home() {
+export const ALL_POSTS_QUERY = gql`
+  query {
+    pokemon(name: "Pikachu") {
+      id
+      number
+      name
+      attacks {
+        special {
+          name
+          type
+          damage
+        }
+      }
+      evolutions {
+        id
+        number
+        name
+        weight {
+          minimum
+          maximum
+        }
+        attacks {
+          fast {
+            name
+            type
+            damage
+          }
+        }
+      }
+    }
+  }
+`
+
+const Home = () => {
+  const { loading, error, data, fetchMore, networkStatus } = useQuery(
+    ALL_POSTS_QUERY,
+    {
+    }
+  )
+
+  console.log(data);
+
+  if (error) return <ErrorMessage message="Error loading posts." />
+  if (loading) return <div>Loading</div>
+
+  const { pokemon } = data
+
+
   return (
     <div className="container">
       <Head>
@@ -12,6 +64,8 @@ export default function Home() {
         <h1 className="title">
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+
+        <h2>{pokemon.name}</h2>
 
         <p className="description">
           Get started by editing <code>pages/index.js</code>
@@ -202,3 +256,6 @@ export default function Home() {
     </div>
   )
 }
+
+export default withData((props) => <Home />)
+
