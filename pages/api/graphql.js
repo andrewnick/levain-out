@@ -1,16 +1,16 @@
 import { ApolloServer, gql } from 'apollo-server-micro'
-import five from "johnny-five";
-import { RaspiIO } from "raspi-io";
+// import five from "johnny-five";
+// import { RaspiIO } from "raspi-io";
 import Cors from "micro-cors";
 
-var board = new five.Board({
-  io: new RaspiIO()
-});
+// var board = new five.Board({
+//   io: new RaspiIO()
+// });
 
-board.on("ready", function () {
-  var led = new five.Led("P1-13");
-  led.blink();
-});
+// board.on("ready", function () {
+//   var led = new five.Led("P1-13");
+//   led.blink();
+// });
 
 // const typeDefs = gql`
 //   type Query {
