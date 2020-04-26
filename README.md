@@ -1,3 +1,15 @@
+## PI install
+
+* Postgres - https://opensource.com/article/17/10/set-postgres-database-your-raspberry-pi
+
+Knex - install globally `npm install knex -g
+
+* Node 
+    - Do not use nvm as there are issues with sudo and RaspIO.
+    - https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/#installing-nodejs-and-npm-from-nodesource
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

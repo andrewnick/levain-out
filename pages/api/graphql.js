@@ -1,7 +1,21 @@
 import { ApolloServer, gql } from 'apollo-server-micro'
-// import five from "johnny-five";
-// import { RaspiIO } from "raspi-io";
 import Cors from "micro-cors";
+import '../../db/init'
+import Log from '../../db/models/Log'
+// import RaspIOInit from '../../lib/raspio';
+
+// console.log('hi');
+
+// RaspIOInit();
+
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 // var board = new five.Board({
 //   io: new RaspiIO()
@@ -22,13 +36,21 @@ import Cors from "micro-cors";
 // `
 const typeDefs = gql`
   type Query {
-    users: [User!]!
+    users: [User!]!,
+    log: Log!
   }
   type Mutation {
     setLed: Led
   }
   type User {
     name: String
+  }
+  type Log {
+    id: Int,
+    created_at: String,
+    temperature: String,
+    humidity: String,
+    set_point: String
   }
   type Led {
     status: String
@@ -38,30 +60,29 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     users(parent, args, context) {
-      // console.log(parent);
-      // console.log(args);
-      // console.log(context);
+      return [{ name: 'Nextjs' }];
+    },
+    log(parent, args, context) {
+      const get = async () => {
+        return await Log.query().where('id', 1).first();
+      }
 
-      return [{ name: 'Nextjs' }]
+      return get();
     },
   },
   Mutation: {
     setLed(root, args) {
-      // const board = new five.Board({
-      //   io: new RaspiIO()
-      // });
-      // var led = new five.Led("P1-13");
-
-      // if (args.status == 'on') {
-      //   board.on("ready", function () {
-      //     led.on();
-      //   });
-      // } else {
-      //   board.on("ready", function () {
-      //     led.off();
-      //   });
-      // }
       console.log('test');
+
+      const set = async () => {
+        return await Log.query().insert({
+          temperature: 24.04,
+          humidity: 80.12,
+          set_point: 26
+        });
+      }
+
+      set()
 
       return { status: 'yes' };
     },
@@ -69,6 +90,7 @@ const resolvers = {
 }
 
 const cors = Cors({
+  origin: '*',
   allowMethods: ["GET", "POST", "OPTIONS"]
 });
 
