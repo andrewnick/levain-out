@@ -15,6 +15,7 @@ export const NAME_QUERY = gql`
       name
     }
     log {
+      id
       temperature
     }
   }
@@ -52,7 +53,7 @@ const Home = () => {
       </Head>
       <Header />
       <h2>{users[0].name}</h2>
-      <h2>{log.temperature}</h2>
+      <h2>{`${log.id}: ${log.temperature}`}</h2>
       <button onClick={() => setLed()}>Add data</button>
 
       <main className="container mx-auto">

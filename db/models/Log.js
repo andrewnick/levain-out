@@ -22,6 +22,29 @@ class Log extends Model {
             }
         };
     }
+
+    async add(temperature, humidity) {
+        return await Log.query().insert({
+            temperature: temperature,
+            humidity: humidity,
+            set_point: 26
+        });
+    }
+
+    async getLastLog() {
+        const logs = await Log.query()
+
+        if (!logs.length) {
+            return {
+                id: 0,
+                created_at: 0,
+                temperature: 0,
+                humidity: 0,
+            }
+        }
+
+        return logs[logs.length - 1];
+    }
 }
 
 export default Log;
