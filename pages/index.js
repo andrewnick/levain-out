@@ -29,12 +29,23 @@ const SET_LED = gql`
   }
 `;
 
+const NEW_TEMP = gql`
+subscription onNewTemp(){
+  newTemp(){
+    temperature
+  }
+}
+`;
+
 const Home = () => {
   const { loading, error, data, fetchMore, networkStatus } = useQuery(
     NAME_QUERY, {}
   )
 
   const [setLed, { leddata }] = useMutation(SET_LED);
+
+  // const { loading, data } = useSubscription(NEW_TEMP);
+
 
 
   if (error) {

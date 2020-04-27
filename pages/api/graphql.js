@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server-micro'
 import Cors from "micro-cors";
+import { PubSub, withFilter } from 'graphql-subscriptions';
 import '../../db/init'
 import Log from '../../db/models/Log'
 import Setting from '../../db/models/Setting'
@@ -7,6 +8,9 @@ import readSensor from '../../lib/hardwareControl';
 // import RaspIOInit from '../../lib/raspio';
 
 // RaspIOInit();
+
+const NEW_TEMP = 'NEW_TEMP';
+
 
 const typeDefs = gql`
   type Query {
@@ -17,6 +21,9 @@ const typeDefs = gql`
   type Mutation {
     setLed: Led
     setSetting(max: Int!, min: Int!): Setting
+  }
+  type Subscription {
+    newTemp(): Temp
   }
   type User {
     name: String
@@ -34,10 +41,14 @@ const typeDefs = gql`
     set_point_max: String,
     set_point_min: String
   }
+  type Temp {
+    temperature: String
+  }
   type Led {
     status: String
   }
 `
+const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
@@ -48,48 +59,16 @@ const resolvers = {
       return new Log().getLastLog();
     },
     setting(parent, args, context) {
-
-      // const { id,
-      //   created_at,
-      //   set_point_max,
-      //   set_point_min } = await new Setting().getLatestSetting();
-      // const get = async () => {
-      //   return await new Setting().getLatestSetting();
-      // }
-
-      // const set = get();
-      // console.log({
-      //   id,
-      //   created_at,
-      //   set_point_max,
-      //   set_point_min
-      // });
-
-      // if (!set.length) {
-      //   return new Setting().getDefault();
-      // }
-
       return new Setting().getLatestSetting();
     }
   },
   Mutation: {
     setLed(root, args) {
-      // const set = async () => {
-      //   return await Log.query().insert({
-      //     temperature: 24.04,
-      //     humidity: 80.12,
-      //     set_point: 26
-      //   });
-      // }
-
-      // set()
-
       readSensor();
-
+      pubsub.publish(NEW_TEMP, { temp: 99 });
       return { status: 'yes' };
     },
     setSetting(root, args) {
-
       const set = async () => {
         return await Setting.query().insert({
           set_point_max: args.max,
@@ -98,15 +77,15 @@ const resolvers = {
       }
 
       set()
-      return {
-        id: 1,
-        created_at: 2,
-        set_point_max: 2,
-        set_point_min: 2
-      }
+    }
+  },
+  Subscription: {
+    newTemp: {
+      temp: () => pubsub.asyncIterator([NEW_TEMP]),
     }
   }
 }
+
 
 const cors = Cors({
   origin: '*',
