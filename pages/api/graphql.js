@@ -23,7 +23,7 @@ const typeDefs = gql`
     setSetting(max: Int!, min: Int!): Setting
   }
   type Subscription {
-    newTemp(): Temp
+    newTemp: Temp
   }
   type User {
     name: String
@@ -65,7 +65,7 @@ const resolvers = {
   Mutation: {
     setLed(root, args) {
       readSensor();
-      pubsub.publish(NEW_TEMP, { temp: 99 });
+      // pubsub.publish(NEW_TEMP, { temp: 99 });
       return { status: 'yes' };
     },
     setSetting(root, args) {
@@ -79,11 +79,11 @@ const resolvers = {
       set()
     }
   },
-  Subscription: {
-    newTemp: {
-      temp: () => pubsub.asyncIterator([NEW_TEMP]),
-    }
-  }
+  // Subscription: {
+  //   newTemp: {
+  //     temp: () => pubsub.asyncIterator([NEW_TEMP]),
+  //   }
+  // }
 }
 
 

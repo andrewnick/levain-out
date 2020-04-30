@@ -6,6 +6,7 @@ exports.up = function (knex) {
         table.decimal('temperature', 5, 2);
         table.decimal('humidity', 5, 2);
         table.decimal('set_point', 5, 2);
+        table.boolean('lamp_on', 5, 2);
     });
 };
 

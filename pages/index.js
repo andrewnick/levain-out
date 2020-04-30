@@ -19,7 +19,7 @@ export const NAME_QUERY = gql`
       temperature
     }
   }
-`
+`;
 
 const SET_LED = gql`
   mutation setLed {
@@ -29,13 +29,13 @@ const SET_LED = gql`
   }
 `;
 
-const NEW_TEMP = gql`
-subscription onNewTemp(){
-  newTemp(){
-    temperature
-  }
-}
-`;
+// const NEW_TEMP = gql`
+// subscription onNewTemp  {
+//   newTemp {
+//     temperature
+//   }
+// }
+// `;
 
 const Home = () => {
   const { loading, error, data, fetchMore, networkStatus } = useQuery(
