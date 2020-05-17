@@ -22,8 +22,11 @@ class Setting extends Model {
     async getLatestSetting() {
         const settings = await Setting.query();
         console.log(settings);
+        console.log(this.getDefault());
 
-        if (!settings.length) {
+        if (settings === 'undefined') {
+            console.log(this.getDefault());
+
             return this.getDefault();
         }
 

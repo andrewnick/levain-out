@@ -1,19 +1,8 @@
 import React from 'react'
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from 'graphql-tag'
 import { Formik } from "formik";
+import { mutation } from "../../graphql/gqlClient";
 
-
-export const SETTING_QUERY = gql`
-  query {
-    setting {
-      set_point_max
-      set_point_min
-    }
-  }
-`
-
-const SET_SETTING = gql`
+const SET_SETTING = `
   mutation setSetting($max: Int!, $min: Int!) {
     setSetting(max: $max, min: $min) {
       created_at
@@ -23,17 +12,16 @@ const SET_SETTING = gql`
   }
 `;
 
-const SetTemp = () => {
-    const { loading, error, data, fetchMore, networkStatus } = useQuery(SETTING_QUERY)
-    const [setSetting, { settingData }] = useMutation(SET_SETTING);
+const SetTemp = ({ setting }) => {
+    // const { loading, error, data, fetchMore, networkStatus } = useQuery(SETTING_QUERY)
+    // const [setSetting, { settingData }] = useMutation(SET_SETTING);
 
-    if (error) {
-        console.log(error);
-        return <div>Error loading settings</div>
-    }
-    if (loading) return <div>Loading</div>
+    // if (error) {
+    //     console.log(error);
+    //     return <div>Error loading settings</div>
+    // }
+    // if (loading) return <div>Loading</div>
 
-    const { setting } = data;
 
     console.log(setting);
 
@@ -44,12 +32,21 @@ const SetTemp = () => {
                 set_point_max: setting.set_point_max
             }}
             onSubmit={values => {
-                setSetting({
-                    variables: {
+                console.log(values);
+
+                mutation(
+                    SET_SETTING,
+                    {
                         min: parseInt(values.set_point_min),
                         max: parseInt(values.set_point_max)
-                    },
-                })
+                    }
+                )
+                // setSetting({
+                //     variables: {
+                //         min: parseInt(values.set_point_min),
+                //         max: parseInt(values.set_point_max)
+                //     },
+                // })
             }}
         >
             {props => {
@@ -71,20 +68,6 @@ const SetTemp = () => {
                                 <div className="font-bold text-xl mb-4">Set temperate thresholds</div>
                             </div>
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
-                                    Upper (°C)
-                                </label>
-                                <input
-                                    id="set_point_min"
-                                    value={values.set_point_min}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                    type="text"
-                                    placeholder=""
-                                />
-                            </div>
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                                     Lower (°C)
                                 </label>
@@ -94,6 +77,20 @@ const SetTemp = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    type="text"
+                                    placeholder=""
+                                />
+                            </div>
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+                                    Upper (°C)
+                                </label>
+                                <input
+                                    id="set_point_min"
+                                    value={values.set_point_min}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                     type="text"
                                     placeholder=""
                                 />

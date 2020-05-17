@@ -16,7 +16,7 @@ class Log extends Model {
             properties: {
                 id: { type: 'integer' },
                 parentId: { type: ['integer', 'null'] },
-                created_at: { type: 'string', minLength: 1, maxLength: 255 },
+                // created_at: { type: 'string', minLength: 1, maxLength: 255 },
                 temperature: { type: ['number', 'null'] },
                 humidity: { type: ['number', 'null'] },
                 lampOn: { type: ['boolean', 'null'] },
@@ -45,6 +45,12 @@ class Log extends Model {
         }
 
         return logs[logs.length - 1];
+    }
+
+    async getAllLogs() {
+        const logs = await Log.query();
+        console.log(logs);
+        return logs.slice(0, 20);
     }
 }
 

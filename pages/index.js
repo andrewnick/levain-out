@@ -1,15 +1,13 @@
 import React from 'react'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import Header from '../components/Header'
 import Info from '../components/Info'
 import Card from '../components/Card'
 import SetTemp from '../components/SetTemp'
-import Graph from '../components/Graph'
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import gql from 'graphql-tag'
-import withData from '../lib/apollo'
+import { query, mutation } from "../graphql/gqlClient";
 
-export const NAME_QUERY = gql`
+export const NAME_QUERY = `
   query {
     users {
       name
@@ -18,10 +16,20 @@ export const NAME_QUERY = gql`
       id
       temperature
     }
+    logs {
+      id
+      created_at
+      temperature
+      humidity
+    }
+    setting {
+      set_point_max
+      set_point_min
+    }
   }
 `;
 
-const SET_LED = gql`
+const SET_LED = `
   mutation setLed {
     setLed {
       status
@@ -37,24 +45,29 @@ const SET_LED = gql`
 // }
 // `;
 
-const Home = () => {
-  const { loading, error, data, fetchMore, networkStatus } = useQuery(
-    NAME_QUERY, {}
-  )
+// Do no server side render this
+const Graph = dynamic(
+  () => import('../components/Graph'),
+  { ssr: false }
+)
 
-  const [setLed, { leddata }] = useMutation(SET_LED);
+const Home = ({ users, log, logs, setting }) => {
+  // const { loading, error, data, fetchMore, networkStatus } = useQuery(
+  //   NAME_QUERY, {}
+  // )
+
+  // const [setLed, { leddata }] = useMutation(SET_LED);
 
   // const { loading, data } = useSubscription(NEW_TEMP);
 
 
 
-  if (error) {
-    console.log(error);
-    return <div>Error loading posts.</div>
-  }
-  if (loading) return <div>Loading</div>
-
-  const { users, log } = data
+  // if (error) {
+  //   console.log(error);
+  //   return <div>Error loading posts.</div>
+  // }
+  // if (loading) return <div>Loading</div>
+  // console.log(logs);
 
   return (
     <div>
@@ -65,7 +78,7 @@ const Home = () => {
       <Header />
       <h2>{users[0].name}</h2>
       <h2>{`${log.id}: ${log.temperature}`}</h2>
-      <button onClick={() => setLed()}>Add data</button>
+      <button onClick={() => mutation(SET_LED)}>Add data</button>
 
       <main className="container mx-auto">
         <div className="flex flex-wrap">
@@ -76,12 +89,12 @@ const Home = () => {
           </div>
           <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
             <Card >
-              <SetTemp />
+              <SetTemp setting={setting} />
             </Card>
           </div>
-          <div className="flex-initial w-100 min-w-full h-48 mb-8">
+          <div className="flex-initial w-100 min-w-full mb-8">
             <Card >
-              <Graph />
+              <Graph logs={logs} />
             </Card>
           </div>
         </div>
@@ -89,5 +102,24 @@ const Home = () => {
     </div>)
 }
 
-// export default Home;
-export default withData(props => (<Home />));
+// This function gets called at build time
+export async function getStaticProps() {
+  // Call an external API endpoint to get data
+  const data = await query(NAME_QUERY);
+
+  // console.log(data);
+
+
+  // By returning { props: venues }, the Home component
+  // will receive `venues` as a prop at build time
+  return {
+    props: {
+      users: data.users,
+      log: data.log,
+      logs: data.logs,
+      setting: data.setting
+    },
+  };
+}
+
+export default Home;

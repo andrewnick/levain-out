@@ -16,7 +16,8 @@ const typeDefs = gql`
   type Query {
     users: [User!]!,
     log: Log!,
-    setting: Setting!
+    logs: [Log!]
+    setting: Setting!,
   }
   type Mutation {
     setLed: Led
@@ -58,6 +59,9 @@ const resolvers = {
     log(parent, args, context) {
       return new Log().getLastLog();
     },
+    logs(parent, args, context) {
+      return new Log().getAllLogs();
+    },
     setting(parent, args, context) {
       return new Setting().getLatestSetting();
     }
@@ -69,14 +73,17 @@ const resolvers = {
       return { status: 'yes' };
     },
     setSetting(root, args) {
+      const tempSetting = {
+        set_point_max: args.max,
+        set_point_min: args.min
+      }
+
       const set = async () => {
-        return await Setting.query().insert({
-          set_point_max: args.max,
-          set_point_min: args.min
-        });
+        return await Setting.query().insert(tempSetting);
       }
 
       set()
+      return new Setting().getLatestSetting();
     }
   },
   // Subscription: {
