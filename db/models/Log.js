@@ -49,8 +49,7 @@ class Log extends Model {
 
     async getAllLogs() {
         const logs = await Log.query();
-        console.log(logs);
-        return logs.slice(0, 20);
+        return logs;
     }
 }
 

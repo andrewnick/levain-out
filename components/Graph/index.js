@@ -5,12 +5,11 @@ const Graph = ({ logs }) => {
 
     return (
         <div className="mb-8" style={{
-            // backgroundColor: '#eee',
             width: '100%',
-            // height: '12rem',
         }}>
 
             <VictoryChart
+                scale={{ x: "time", y: "linear" }}
             // theme={VictoryTheme.material}
             >
                 <VictoryLine
@@ -20,9 +19,7 @@ const Graph = ({ logs }) => {
                     }}
                     data={logs}
                     x={(datum) => {
-                        var ts = new Date(datum.created_at * 1000);
-
-                        return parseInt(datum.created_at)
+                        return new Date(parseInt(datum.created_at))
                     }}
                     y={(datum) => {
                         return parseInt(datum.temperature)
@@ -35,9 +32,7 @@ const Graph = ({ logs }) => {
                     }}
                     data={logs}
                     x={(datum) => {
-                        var ts = new Date(datum.created_at * 1000);
-
-                        return parseInt(datum.created_at)
+                        return new Date(parseInt(datum.created_at))
                     }}
                     y={(datum) => {
                         return parseInt(datum.temperature)
@@ -45,14 +40,13 @@ const Graph = ({ logs }) => {
                 />
                 <VictoryAxis dependentAxis
                     label="temperature"
-                    domain={[-5, 50]}
+                    domain={[15, 30]}
                     style={{
                         axisLabel: { padding: 30, fontSize: 10 },
                     }}
                 />
                 <VictoryAxis
                     label="time"
-                    scale={{ x: "time" }}
                     style={{
                         axisLabel: { padding: 40 }
                     }}
