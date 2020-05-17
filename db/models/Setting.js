@@ -24,7 +24,7 @@ class Setting extends Model {
         console.log(settings);
         console.log(this.getDefault());
 
-        if (settings === 'undefined') {
+        if (!settings.length) {
             console.log(this.getDefault());
 
             return this.getDefault();

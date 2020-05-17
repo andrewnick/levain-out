@@ -24,11 +24,27 @@ class Log extends Model {
         };
     }
 
+    // // This object defines the relations to other models.
+    // static get relationMappings() {
+    //     // Importing models here is a one way to avoid require loops.
+    //     const Session = require('./Session');
+
+    //     return {
+    //         owner: {
+    //             relation: Model.BelongsToOneRelation,
+    //             modelClass: Session,
+    //             join: {
+    //                 from: 'log.session_id',
+    //                 to: 'session.id'
+    //             }
+    //         }
+    //     }
+    // }
+
     async add(temperature, humidity) {
         return await Log.query().insert({
             temperature: temperature,
-            humidity: humidity,
-            set_point: 26
+            humidity: humidity
         });
     }
 

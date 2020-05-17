@@ -41,12 +41,6 @@ const SetTemp = ({ setting }) => {
                         max: parseInt(values.set_point_max)
                     }
                 )
-                // setSetting({
-                //     variables: {
-                //         min: parseInt(values.set_point_min),
-                //         max: parseInt(values.set_point_max)
-                //     },
-                // })
             }}
         >
             {props => {

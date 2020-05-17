@@ -4,6 +4,7 @@ import { PubSub, withFilter } from 'graphql-subscriptions';
 import '../../db/init'
 import Log from '../../db/models/Log'
 import Setting from '../../db/models/Setting'
+import Session from '../../db/models/Session';
 import readSensor from '../../lib/hardwareControl';
 // import RaspIOInit from '../../lib/raspio';
 
@@ -11,6 +12,8 @@ import readSensor from '../../lib/hardwareControl';
 
 const NEW_TEMP = 'NEW_TEMP';
 
+let readSensorInterval;
+let sessionID;
 
 const typeDefs = gql`
   type Query {
@@ -22,6 +25,9 @@ const typeDefs = gql`
   type Mutation {
     setLed: Led
     setSetting(max: Int!, min: Int!): Setting
+    startRecording: Session
+    pauseRecording: Session
+    stopRecording: Session
   }
   type Subscription {
     newTemp: Temp
@@ -33,8 +39,7 @@ const typeDefs = gql`
     id: Int,
     created_at: String,
     temperature: String,
-    humidity: String,
-    set_point: String
+    humidity: String
   }
   type Setting {
     id: Int,
@@ -47,6 +52,9 @@ const typeDefs = gql`
   }
   type Led {
     status: String
+  }
+  type Session {
+    id: Int
   }
 `
 const pubsub = new PubSub();
@@ -84,6 +92,46 @@ const resolvers = {
 
       set()
       return new Setting().getLatestSetting();
+    },
+    startRecording(root, args) {
+      console.log('start Recording');
+      const setting = new Setting().getLatestSetting()
+
+      const setSession = async () => {
+        const s = await Session.query().insert({
+          type: 'temp_measure',
+          status: 'started',
+          set_point_min: setting.set_point_min,
+          set_point_max: setting.set_point_max
+        })
+        // console.log(sess);
+        const sess = await new Session().getCurrentSession()
+
+        return sess;
+      }
+
+      // try {
+
+      // } catch(Ex)
+      setSession();
+
+      // console.log(sess);
+      // setSession().then(sess => {
+      //   console.log(sess);
+      // readSensorInterval = setInterval(readSensor, 2000);
+      // });
+
+
+      return { id: sess.id }
+    },
+    pauseRecording(root, args) {
+      console.log('pause Recording');
+      return { id: 0 }
+    },
+    stopRecording(root, args) {
+      console.log('stop Recording');
+      clearInterval(readSensorInterval);
+      return { id: 0 }
     }
   },
   // Subscription: {

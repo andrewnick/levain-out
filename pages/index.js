@@ -5,6 +5,7 @@ import Header from '../components/Header'
 import Info from '../components/Info'
 import Card from '../components/Card'
 import SetTemp from '../components/SetTemp'
+import RecordingControl from '../components/RecordingControl'
 import { query, mutation } from "../graphql/gqlClient";
 
 export const NAME_QUERY = `
@@ -94,6 +95,7 @@ const Home = ({ users, log, logs, setting }) => {
           </div>
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card >
+              <RecordingControl />
               <Graph logs={logs} />
             </Card>
           </div>

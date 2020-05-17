@@ -25,7 +25,7 @@ const Graph = ({ logs }) => {
                         return parseInt(datum.temperature)
                     }}
                 />
-                <VictoryScatter
+                {/* <VictoryScatter
                     style={{
                         data: { stroke: "#c43a31" },
                         parent: { border: "1px solid #ccc", fontSize: '10px' }
@@ -37,7 +37,7 @@ const Graph = ({ logs }) => {
                     y={(datum) => {
                         return parseInt(datum.temperature)
                     }}
-                />
+                /> */}
                 <VictoryAxis dependentAxis
                     label="temperature"
                     domain={[15, 30]}
