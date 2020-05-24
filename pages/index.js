@@ -17,12 +17,6 @@ export const NAME_QUERY = `
       id
       temperature
     }
-    logs {
-      id
-      created_at
-      temperature
-      humidity
-    }
     setting {
       set_point_max
       set_point_min
@@ -30,13 +24,6 @@ export const NAME_QUERY = `
   }
 `;
 
-const SET_LED = `
-  mutation setLed {
-    setLed {
-      status
-    }
-  }
-`;
 
 // const NEW_TEMP = gql`
 // subscription onNewTemp  {
@@ -52,24 +39,7 @@ const Graph = dynamic(
   { ssr: false }
 )
 
-const Home = ({ users, log, logs, setting }) => {
-  // const { loading, error, data, fetchMore, networkStatus } = useQuery(
-  //   NAME_QUERY, {}
-  // )
-
-  // const [setLed, { leddata }] = useMutation(SET_LED);
-
-  // const { loading, data } = useSubscription(NEW_TEMP);
-
-
-
-  // if (error) {
-  //   console.log(error);
-  //   return <div>Error loading posts.</div>
-  // }
-  // if (loading) return <div>Loading</div>
-  // console.log(logs);
-
+const Home = ({ users, log, setting }) => {
   return (
     <div>
       <Head>
@@ -96,7 +66,7 @@ const Home = ({ users, log, logs, setting }) => {
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card >
               <RecordingControl />
-              <Graph logs={logs} />
+              <Graph />
             </Card>
           </div>
         </div>
@@ -118,7 +88,7 @@ export async function getStaticProps() {
     props: {
       users: data.users,
       log: data.log,
-      logs: data.logs,
+      // logs: data.logs,
       setting: data.setting
     },
   };

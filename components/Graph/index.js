@@ -1,13 +1,34 @@
 import React from 'react';
 import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter } from 'victory'
-const Graph = ({ logs }) => {
-    console.log("graph: ", logs);
+import useSWR from 'swr'
+import { query } from "../../graphql/gqlClient";
+
+const GET_LOGS = `
+  query {
+    logs {
+      id
+      created_at
+      temperature
+      humidity
+    }
+  }
+`;
+
+const Graph = () => {
+
+    const { data, error } = useSWR(GET_LOGS, query, {
+        refreshInterval: 2000
+    });
+
+    if (error) return <div>failed to load</div>
+    if (!data) return <div>loading...</div>
+
+    const { logs } = data;
 
     return (
         <div className="mb-8" style={{
             width: '100%',
         }}>
-
             <VictoryChart
                 scale={{ x: "time", y: "linear" }}
             // theme={VictoryTheme.material}

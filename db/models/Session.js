@@ -1,4 +1,6 @@
 import { Model } from 'objection';
+import Log from './Log';
+// const Log = require('./Log');
 
 class Session extends Model {
     static get tableName() {
@@ -20,30 +22,40 @@ class Session extends Model {
     }
 
     // This object defines the relations to other models.
-    // static get relationMappings() {
-    //     // Importing models here is a one way to avoid require loops.
-    //     const Log = require('./Log');
-
-    //     return {
-    //         logs: {
-    //             relation: Model.HasManyRelation,
-    //             // The related model. This can be either a Model
-    //             // subclass constructor or an absolute file path
-    //             // to a module that exports one. We use a model
-    //             // subclass constructor `Animal` here.
-    //             modelClass: Log,
-    //             join: {
-    //                 from: 'session.id',
-    //                 to: 'log.sessionId'
-    //             }
-    //         },
-    //     }
-    // }
+    static get relationMappings() {
+        // Importing models here is a one way to avoid require loops.
+        return {
+            logs: {
+                relation: Model.HasManyRelation,
+                // The related model. This can be either a Model
+                // subclass constructor or an absolute file path
+                // to a module that exports one. We use a model
+                // subclass constructor `Animal` here.
+                modelClass: Log,
+                join: {
+                    from: 'sessions.id',
+                    to: 'logs.session_id'
+                }
+            },
+        }
+    }
 
     async getCurrentSession() {
-        // const sessions = await Session.query().where('status', '=', 'started').orWhere('status', '=', 'paused').limit(1)
-        const sessions = await Session.query().where({ status: 'started' }).orWhere({ status: 'paused' }).limit(1)
-        console.log(sessions);
+        let session = await Session.query().
+            where({ status: 'started' }).
+            orWhere({ status: 'paused' }).
+            orderBy('id', 'desc').
+            first();
+
+        console.log(session);
+
+        if (!session) {
+            session = await Session.query().
+                orderBy('id', 'desc').
+                first();
+        }
+
+        return session;
     }
 }
 

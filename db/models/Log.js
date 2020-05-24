@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import Session from './Session';
 
 class Log extends Model {
     static get tableName() {
@@ -24,22 +25,20 @@ class Log extends Model {
         };
     }
 
-    // // This object defines the relations to other models.
-    // static get relationMappings() {
-    //     // Importing models here is a one way to avoid require loops.
-    //     const Session = require('./Session');
-
-    //     return {
-    //         owner: {
-    //             relation: Model.BelongsToOneRelation,
-    //             modelClass: Session,
-    //             join: {
-    //                 from: 'log.session_id',
-    //                 to: 'session.id'
-    //             }
-    //         }
-    //     }
-    // }
+    // This object defines the relations to other models.
+    static get relationMappings() {
+        // Importing models here is a one way to avoid require loops.
+        return {
+            owner: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Session,
+                join: {
+                    from: 'logs.session_id',
+                    to: 'sessions.id'
+                }
+            }
+        }
+    }
 
     async add(temperature, humidity) {
         return await Log.query().insert({
@@ -66,6 +65,15 @@ class Log extends Model {
     async getAllLogs() {
         const logs = await Log.query();
         return logs;
+    }
+
+    getDefault() {
+        return {
+            id: 0,
+            created_at: 0,
+            temperature: 0,
+            humidity: 0,
+        }
     }
 }
 

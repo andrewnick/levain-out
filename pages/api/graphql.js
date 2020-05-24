@@ -67,8 +67,17 @@ const resolvers = {
     log(parent, args, context) {
       return new Log().getLastLog();
     },
-    logs(parent, args, context) {
-      return new Log().getAllLogs();
+    async logs(parent, args, context) {
+      const sess = await new Session().getCurrentSession()
+      console.log(sess.id);
+      const logs = await sess.$relatedQuery('logs');
+
+      return logs ? logs : {
+        id: 0,
+        created_at: 0,
+        temperature: 0,
+        humidity: 0,
+      };
     },
     setting(parent, args, context) {
       return new Setting().getLatestSetting();
@@ -93,45 +102,39 @@ const resolvers = {
       set()
       return new Setting().getLatestSetting();
     },
-    startRecording(root, args) {
+    async startRecording(root, args) {
       console.log('start Recording');
-      const setting = new Setting().getLatestSetting()
+      const setting = await new Setting().getLatestSetting()
 
-      const setSession = async () => {
-        const s = await Session.query().insert({
-          type: 'temp_measure',
-          status: 'started',
-          set_point_min: setting.set_point_min,
-          set_point_max: setting.set_point_max
-        })
-        // console.log(sess);
-        const sess = await new Session().getCurrentSession()
+      const sess = await Session.query().insert({
+        type: 'temp_measure',
+        status: 'started',
+        set_point_min: setting.set_point_min,
+        set_point_max: setting.set_point_max
+      })
 
-        return sess;
-      }
-
-      // try {
-
-      // } catch(Ex)
-      setSession();
-
-      // console.log(sess);
-      // setSession().then(sess => {
-      //   console.log(sess);
-      // readSensorInterval = setInterval(readSensor, 2000);
-      // });
+      console.log(sess);
 
 
+      readSensorInterval = setInterval(readSensor, 2000);
+
+      return { id: sess.id };
+    },
+    async pauseRecording(root, args) {
+      console.log('pause Recording');
+      const sess = await new Session().getCurrentSession()
+      Session.findById(sess.id).update({ status: 'paused' })
       return { id: sess.id }
     },
-    pauseRecording(root, args) {
-      console.log('pause Recording');
-      return { id: 0 }
-    },
-    stopRecording(root, args) {
+    async stopRecording(root, args) {
       console.log('stop Recording');
+
+      const sess = await new Session().getCurrentSession()
+      const updatedSession = await Session.query().patchAndFetchById(sess.id, { status: 'finished' })
+
       clearInterval(readSensorInterval);
-      return { id: 0 }
+
+      return { id: sess.id };
     }
   },
   // Subscription: {
