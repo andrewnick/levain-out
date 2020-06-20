@@ -16,6 +16,7 @@ export const NAME_QUERY = `
     log {
       id
       temperature
+      humidity
     }
     setting {
       set_point_max
@@ -25,17 +26,24 @@ export const NAME_QUERY = `
 `;
 
 
-// const NEW_TEMP = gql`
+// const NEW_TEMP = `
 // subscription onNewTemp  {
 //   newTemp {
 //     temperature
 //   }
 // }
 // `;
+const SET_LED = `
+  mutation setLed  {
+    setLed {
+      status
+    }
+  }
+`;
 
 // Do no server side render this
 const Graph = dynamic(
-  () => import('../components/Graph'),
+  () => import('../components/Graph/index'),
   { ssr: false }
 )
 
@@ -47,15 +55,21 @@ const Home = ({ users, log, setting }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <h2>{users[0].name}</h2>
-      <h2>{`${log.id}: ${log.temperature}`}</h2>
-      <button onClick={() => mutation(SET_LED)}>Add data</button>
+      {/* <h2>{users[0].name}</h2>
+      <h2>{`${log.id}: ${log.temperature}`}</h2> */}
+
 
       <main className="container mx-auto">
         <div className="flex flex-wrap">
           <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
             <Card >
-              <Info />
+              <Info temp={log.temperature} humidity={log.humidity} />
+              <button
+                onClick={() => mutation(SET_LED)}
+                className="w-full shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+              >
+                Toggle Light
+              </button>
             </Card>
           </div>
           <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">

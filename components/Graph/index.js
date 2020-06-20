@@ -1,5 +1,5 @@
 import React from 'react';
-import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter } from 'victory'
+import { VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryScatter, VictoryVoronoiContainer, VictoryGroup, VictoryTooltip } from 'victory'
 import useSWR from 'swr'
 import { query } from "../../graphql/gqlClient";
 
@@ -24,6 +24,8 @@ const Graph = () => {
     if (!data) return <div>loading...</div>
 
     const { logs } = data;
+    console.log("hi");
+    console.log(logs);
 
     return (
         <div className="mb-8" style={{
@@ -31,13 +33,15 @@ const Graph = () => {
         }}>
             <VictoryChart
                 scale={{ x: "time", y: "linear" }}
-            // theme={VictoryTheme.material}
+                containerComponent={
+                    <VictoryVoronoiContainer voronoiDimension="x"
+                        labels={({ datum }) => `Temperature: ${datum.temperature} Humidity: ${datum.humidity}`}
+                        labelComponent={<VictoryTooltip cornerRadius={0} flyoutStyle={{ fill: "white" }} />}
+                    />
+                }
             >
+                <VictoryAxis />
                 <VictoryLine
-                    style={{
-                        data: { stroke: "#c43a31" },
-                        parent: { border: "1px solid #ccc", fontSize: '10px' }
-                    }}
                     data={logs}
                     x={(datum) => {
                         return new Date(parseInt(datum.created_at))
@@ -45,31 +49,23 @@ const Graph = () => {
                     y={(datum) => {
                         return parseInt(datum.temperature)
                     }}
-                />
-                {/* <VictoryScatter
                     style={{
-                        data: { stroke: "#c43a31" },
-                        parent: { border: "1px solid #ccc", fontSize: '10px' }
+                        data: { stroke: "tomato", strokeWidth: ({ active }) => active ? 4 : 2 },
+                        labels: { fill: "tomato" }
                     }}
+                />
+
+                <VictoryLine
                     data={logs}
                     x={(datum) => {
                         return new Date(parseInt(datum.created_at))
                     }}
                     y={(datum) => {
-                        return parseInt(datum.temperature)
+                        return parseInt(datum.humidity)
                     }}
-                /> */}
-                <VictoryAxis dependentAxis
-                    label="temperature"
-                    domain={[15, 30]}
                     style={{
-                        axisLabel: { padding: 30, fontSize: 10 },
-                    }}
-                />
-                <VictoryAxis
-                    label="time"
-                    style={{
-                        axisLabel: { padding: 40 }
+                        data: { stroke: "blue", strokeWidth: ({ active }) => active ? 4 : 2 },
+                        labels: { fill: "white" }
                     }}
                 />
             </VictoryChart>

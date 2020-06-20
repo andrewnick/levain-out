@@ -1,19 +1,13 @@
 import { ApolloServer, gql } from 'apollo-server-micro'
 import Cors from "micro-cors";
-import { PubSub, withFilter } from 'graphql-subscriptions';
 import '../../db/init'
 import Log from '../../db/models/Log'
 import Setting from '../../db/models/Setting'
 import Session from '../../db/models/Session';
 import readSensor from '../../lib/hardwareControl';
-// import RaspIOInit from '../../lib/raspio';
-
-// RaspIOInit();
-
-const NEW_TEMP = 'NEW_TEMP';
+import toggleLED from '../../lib/led';
 
 let readSensorInterval;
-let sessionID;
 
 const typeDefs = gql`
   type Query {
@@ -57,7 +51,6 @@ const typeDefs = gql`
     id: Int
   }
 `
-const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
@@ -69,7 +62,7 @@ const resolvers = {
     },
     async logs(parent, args, context) {
       const sess = await new Session().getCurrentSession()
-      console.log(sess.id);
+      // console.log(sess.id);
       const logs = await sess.$relatedQuery('logs');
 
       return logs ? logs : {
@@ -84,10 +77,10 @@ const resolvers = {
     }
   },
   Mutation: {
-    setLed(root, args) {
-      readSensor();
-      // pubsub.publish(NEW_TEMP, { temp: 99 });
-      return { status: 'yes' };
+    async setLed(root, args) {
+      // readSensor();
+      const status = await toggleLED();
+      return { status: status ? 'on' : 'off' };
     },
     setSetting(root, args) {
       const tempSetting = {
@@ -113,10 +106,9 @@ const resolvers = {
         set_point_max: setting.set_point_max
       })
 
-      console.log(sess);
-
-
+      // console.log(sess);
       readSensorInterval = setInterval(readSensor, 2000);
+      console.log(readSensorInterval);
 
       return { id: sess.id };
     },
@@ -128,20 +120,17 @@ const resolvers = {
     },
     async stopRecording(root, args) {
       console.log('stop Recording');
+      console.log(readSensorInterval);
 
       const sess = await new Session().getCurrentSession()
       const updatedSession = await Session.query().patchAndFetchById(sess.id, { status: 'finished' })
+
 
       clearInterval(readSensorInterval);
 
       return { id: sess.id };
     }
-  },
-  // Subscription: {
-  //   newTemp: {
-  //     temp: () => pubsub.asyncIterator([NEW_TEMP]),
-  //   }
-  // }
+  }
 }
 
 

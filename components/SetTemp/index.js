@@ -23,7 +23,7 @@ const SetTemp = ({ setting }) => {
     // if (loading) return <div>Loading</div>
 
 
-    console.log(setting);
+    // console.log(setting);
 
     return (
         <Formik

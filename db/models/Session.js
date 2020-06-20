@@ -47,7 +47,7 @@ class Session extends Model {
             orderBy('id', 'desc').
             first();
 
-        console.log(session);
+        // console.log(session);
 
         if (!session) {
             session = await Session.query().
