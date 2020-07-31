@@ -3,6 +3,7 @@ import { GraphQLClient } from "graphql-request";
 const port = 3000;
 const host = 'http';
 const domain = process.browser !== 'undefined' ? `raspberrypi.local:${port}` : `localhost:${port}`;
+// const domain = `localhost:${port}`;
 
 const API = `${host}://${domain}/api/graphql`;
 

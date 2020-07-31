@@ -24,8 +24,13 @@ const Graph = () => {
     if (!data) return <div>loading...</div>
 
     const { logs } = data;
-    console.log("hi");
-    console.log(logs);
+    const maximaTemp = Math.max(...logs.map((d) => d.temperature));
+    const maximaHumidity = Math.max(...logs.map((d) => d.humidity));
+    const maximaLampOn = Math.max(...logs.map((d) => d.lamp_on));
+    const numberOfTicks = 8;
+    const normalisedValues = [...Array(numberOfTicks).keys()].map(i => (i + 1) / numberOfTicks)
+    console.log(normalisedValues);
+
 
     return (
         <div className="mb-8" style={{
@@ -33,6 +38,7 @@ const Graph = () => {
         }}>
             <VictoryChart
                 scale={{ x: "time", y: "linear" }}
+                domain={{ y: [0, 1] }}
                 containerComponent={
                     <VictoryVoronoiContainer voronoiDimension="x"
                         labels={({ datum }) => `Temperature: ${datum.temperature} Humidity: ${datum.humidity}`}
@@ -40,32 +46,83 @@ const Graph = () => {
                     />
                 }
             >
-                <VictoryAxis />
+                <VictoryAxis crossAxis />
+                {/* <VictoryAxis
+                    dependentAxis
+                    key={1}
+                    label={'Humidity'}
+                    style={{
+                        axis: { stroke: "#5353ff" },
+                        tickLabels: { fill: "#5353ff" }
+                    }}
+                    // Use normalized tickValues (0 - 1)
+                    tickValues={normalisedValues}
+                    tickFormat={(t) => t * maximaHumidity}
+                // maxDomain={{ y: maximaTemp }}
+                /> */}
+                {/* <VictoryAxis
+                    dependentAxis
+                    key={1}
+                    label={'Lamp'}
+                    orientation="right"
+                    style={{
+                        axis: { stroke: "#4caf50" },
+                        tickLabels: { fill: "#4caf50" }
+                    }}
+                    // Use normalized tickValues (0 - 1)
+                    tickValues={['On', 'Off']}
+                    tickFormat={(t) => t}
+                /> */}
+                <VictoryAxis
+                    dependentAxis
+                    key={1}
+                    label={'Temperature'}
+                    style={{
+                        axis: { stroke: "#f56565" },
+                        tickLabels: { fill: "#f56565" }
+                    }}
+                    // Use normalized tickValues (0 - 1)
+                    tickValues={normalisedValues}
+                    tickFormat={(t) => t * maximaTemp}
+                />
                 <VictoryLine
                     data={logs}
                     x={(datum) => {
                         return new Date(parseInt(datum.created_at))
                     }}
                     y={(datum) => {
-                        return parseInt(datum.temperature)
+                        return parseInt(datum.temperature) / maximaTemp
                     }}
                     style={{
-                        data: { stroke: "tomato", strokeWidth: ({ active }) => active ? 4 : 2 },
-                        labels: { fill: "tomato" }
+                        data: { stroke: "#f56565" },
+                        labels: { fill: "#f56565" }
                     }}
                 />
-
+                {/* 
                 <VictoryLine
                     data={logs}
                     x={(datum) => {
                         return new Date(parseInt(datum.created_at))
                     }}
                     y={(datum) => {
-                        return parseInt(datum.humidity)
+                        return parseInt(datum.humidity) / maximaHumidity
                     }}
                     style={{
-                        data: { stroke: "blue", strokeWidth: ({ active }) => active ? 4 : 2 },
-                        labels: { fill: "white" }
+                        data: { stroke: "#5353ff", strokeWidth: 1 },
+                        labels: { fill: "#5353ff" }
+                    }}
+                /> */}
+                <VictoryLine
+                    data={logs}
+                    x={(datum) => {
+                        return new Date(parseInt(datum.created_at))
+                    }}
+                    y={(datum) => {
+                        return datum.lamp_on ? 1 : 0
+                    }}
+                    style={{
+                        data: { stroke: "#4caf50", strokeWidth: 1 },
+                        labels: { fill: "#4caf50" }
                     }}
                 />
             </VictoryChart>

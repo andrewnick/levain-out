@@ -55,10 +55,6 @@ const Home = ({ users, log, setting }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      {/* <h2>{users[0].name}</h2>
-      <h2>{`${log.id}: ${log.temperature}`}</h2> */}
-
-
       <main className="container mx-auto">
         <div className="flex flex-wrap">
           <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
@@ -89,15 +85,9 @@ const Home = ({ users, log, setting }) => {
 }
 
 // This function gets called at build time
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   // Call an external API endpoint to get data
   const data = await query(NAME_QUERY);
-
-  // console.log(data);
-
-
-  // By returning { props: venues }, the Home component
-  // will receive `venues` as a prop at build time
   return {
     props: {
       users: data.users,
