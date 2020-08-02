@@ -48,6 +48,8 @@ const Graph = dynamic(
 )
 
 const Home = ({ users, log, setting }) => {
+  // logger.log('info', 'message', {});
+
   return (
     <div>
       <Head>
@@ -87,6 +89,7 @@ const Home = ({ users, log, setting }) => {
 // This function gets called at build time
 export async function getServerSideProps(context) {
   // Call an external API endpoint to get data
+
   const data = await query(NAME_QUERY);
   return {
     props: {

@@ -1,9 +1,10 @@
 // Update with your config settings.
+const config = require('./config/global');
 
 module.exports = {
   development: {
     client: "postgresql",
-    connection: 'postgresql://pi:password@localhost:5432/levain-out',
+    connection: config.development.pg.connection,
     searchPath: ['knex', 'public'],
     useNullAsDefault: true,
     migrations: {
