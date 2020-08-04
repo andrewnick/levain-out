@@ -20,7 +20,7 @@ class Log extends Model {
                 // created_at: { type: 'string', minLength: 1, maxLength: 255 },
                 temperature: { type: ['number', 'null'] },
                 humidity: { type: ['number', 'null'] },
-                lampOn: { type: ['boolean', 'null'] },
+                lamp_on: { type: ['boolean', 'null'] },
             }
         };
     }
