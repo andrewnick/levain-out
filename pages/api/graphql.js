@@ -70,6 +70,7 @@ const resolvers = {
         created_at: 0,
         temperature: 0,
         humidity: 0,
+        lamp_on: 0,
       };
     },
     setting(parent, args, context) {

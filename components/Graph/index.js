@@ -62,6 +62,19 @@ const Graph = () => {
                             labels: { fill: "#f56565" }
                         }}
                     />
+                    {/* <VictoryLine
+                        data={logs}
+                        x={(datum) => {
+                            return new Date(parseInt(datum.created_at))
+                        }}
+                        y={(datum) => {
+                            return datum.lamp_on
+                        }}
+                        style={{
+                            data: { stroke: "#f56565" },
+                            labels: { fill: "#f56565" }
+                        }}
+                    /> */}
                 </VictoryGroup>
             </VictoryChart>
         </div >
