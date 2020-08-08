@@ -3,15 +3,21 @@
 module.exports = {
   development: {
     client: "postgresql",
-    connection: 'postgresql://pi:password@localhost:5432/levain-out',
-    searchPath: ['knex', 'public'],
+    // connection: 'postgresql://pi:password@localhost:5432/levain-out',
+    connection: {
+      host: "127.0.0.1",
+      user: "andrew",
+      password: "",
+      database: "levain-out",
+    },
+    searchPath: ["knex", "public"],
     useNullAsDefault: true,
     migrations: {
-      directory: __dirname + '/db/migrations',
+      directory: __dirname + "/db/migrations",
     },
     seeds: {
-      directory: __dirname + '/db/seeds'
-    }
+      directory: __dirname + "/db/seeds",
+    },
   },
 
   // staging: {
@@ -45,5 +51,4 @@ module.exports = {
   //     tableName: 'knex_migrations'
   //   }
   // }
-
 };
