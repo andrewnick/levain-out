@@ -1,20 +1,20 @@
-import { ApolloServer, gql } from 'apollo-server-micro'
+import { ApolloServer, gql } from "apollo-server-micro";
 import Cors from "micro-cors";
-import '../../db/init'
-import Log from '../../db/models/Log'
-import Setting from '../../db/models/Setting'
-import Session from '../../db/models/Session';
-import readSensor from '../../lib/hardwareControl';
-import toggleLED from '../../lib/led';
+import "../../db/init";
+import Log from "../../db/models/Log";
+import Setting from "../../db/models/Setting";
+import Session from "../../db/models/Session";
+import readSensor from "../../lib/hardwareControl";
+import toggleLED from "../../lib/led";
 
 let readSensorInterval;
 
 const typeDefs = gql`
   type Query {
-    users: [User!]!,
-    log: Log!,
+    users: [User!]!
+    log: Log!
     logs: [Log!]
-    setting: Setting!,
+    setting: Setting!
   }
   type Mutation {
     setLed: Led
@@ -30,15 +30,16 @@ const typeDefs = gql`
     name: String
   }
   type Log {
-    id: Int,
-    created_at: String,
-    temperature: String,
+    id: Int
+    created_at: String
+    temperature: String
     humidity: String
+    lamp_on: String
   }
   type Setting {
-    id: Int,
-    created_at: String,
-    set_point_max: String,
+    id: Int
+    created_at: String
+    set_point_max: String
     set_point_min: String
   }
   type Temp {
@@ -50,62 +51,66 @@ const typeDefs = gql`
   type Session {
     id: Int
   }
-`
+`;
 
 const resolvers = {
   Query: {
     users(parent, args, context) {
-      return [{ name: 'Nextjs' }];
+      return [{ name: "Nextjs" }];
     },
     log(parent, args, context) {
+      return new Log().getNLastLog(3);
       return new Log().getLastLog();
     },
     async logs(parent, args, context) {
-      const sess = await new Session().getCurrentSession()
+      // const sess = await new Session().getCurrentSession();
+      const sess = await new Session().getSession(34);
       // console.log(sess.id);
-      const logs = await sess.$relatedQuery('logs');
+      const logs = await sess.$relatedQuery("logs");
 
-      return logs ? logs : {
-        id: 0,
-        created_at: 0,
-        temperature: 0,
-        humidity: 0,
-        lamp_on: 0,
-      };
+      return logs
+        ? logs
+        : {
+            id: 0,
+            created_at: 0,
+            temperature: 0,
+            humidity: 0,
+            lamp_on: false,
+          };
     },
     setting(parent, args, context) {
       return new Setting().getLatestSetting();
-    }
+    },
   },
   Mutation: {
     async setLed(root, args) {
       // readSensor();
       const status = await toggleLED();
-      return { status: status ? 'on' : 'off' };
+      return { status: status ? "on" : "off" };
     },
     setSetting(root, args) {
       const tempSetting = {
         set_point_max: args.max,
-        set_point_min: args.min
-      }
+        set_point_min: args.min,
+      };
 
       const set = async () => {
         return await Setting.query().insert(tempSetting);
-      }
+      };
 
-      set()
+      set();
       return new Setting().getLatestSetting();
     },
     async startRecording(root, args) {
-      console.log('start Recording');
-      const setting = await new Setting().getLatestSetting()
+      console.log("start Recording");
+      const setting = await new Setting().getLatestSetting();
 
       const sess = await Session.query().insert({
-        type: 'temp_measure',
-        status: 'started',
+        type: "temp_measure",
+        status: "started",
         set_point_min: setting.set_point_min,
-        set_point_max: setting.set_point_max
-      })
+        set_point_max: setting.set_point_max,
+      });
 
       // console.log(sess);
       readSensorInterval = setInterval(readSensor, 2000);
@@ -114,40 +119,40 @@ const resolvers = {
       return { id: sess.id };
     },
     async pauseRecording(root, args) {
-      console.log('pause Recording');
-      const sess = await new Session().getCurrentSession()
-      Session.findById(sess.id).update({ status: 'paused' })
-      return { id: sess.id }
+      console.log("pause Recording");
+      const sess = await new Session().getCurrentSession();
+      Session.findById(sess.id).update({ status: "paused" });
+      return { id: sess.id };
     },
     async stopRecording(root, args) {
-      console.log('stop Recording');
+      console.log("stop Recording");
       console.log(readSensorInterval);
 
-      const sess = await new Session().getCurrentSession()
-      const updatedSession = await Session.query().patchAndFetchById(sess.id, { status: 'finished' })
-
+      const sess = await new Session().getCurrentSession();
+      const updatedSession = await Session.query().patchAndFetchById(sess.id, {
+        status: "finished",
+      });
 
       clearInterval(readSensorInterval);
 
       return { id: sess.id };
-    }
-  }
-}
-
+    },
+  },
+};
 
 const cors = Cors({
-  origin: '*',
-  allowMethods: ["GET", "POST", "OPTIONS"]
+  origin: "*",
+  allowMethods: ["GET", "POST", "OPTIONS"],
 });
 
-const apolloServer = new ApolloServer({ typeDefs, resolvers })
+const apolloServer = new ApolloServer({ typeDefs, resolvers });
 
-const handler = apolloServer.createHandler({ path: '/api/graphql' });
+const handler = apolloServer.createHandler({ path: "/api/graphql" });
 
 export const config = {
   api: {
     bodyParser: false,
   },
-}
+};
 
 export default cors(handler);
