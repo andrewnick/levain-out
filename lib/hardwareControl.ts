@@ -3,12 +3,12 @@ import Log from "../db/models/Log";
 import Session from "../db/models/Session";
 import { Gpio } from "onoff";
 import { randomInt } from "./random";
-import isMac from "../lib/isMac";
+import isMac from "./isMac";
 
-const sw = isMac() ? null : new Gpio(21, "out");
-
-const sensorType = 22;
-const sensorGPIO = 4;
+const sw: Gpio = isMac() ? null : new Gpio(21, "out");
+const sensor = isMac() ? null : dhtSensor.promises;
+const sensorType: number = 22;
+const sensorGPIO: number = 4;
 
 // dhtSensor.initialize({
 //     test: {
@@ -18,8 +18,6 @@ const sensorGPIO = 4;
 //         }
 //     }
 // });
-
-// const sensor = dhtSensor.promises;
 
 // sensor.readSync(sensorType, sensorGPIO, function (err, temperature, humidity) {
 //     if (!err) {
