@@ -1,15 +1,19 @@
-// Update with your config settings.
+// Update with your config settcings.
+import isMac from "./lib/isMac";
 
-module.exports = {
-  development: {
-    client: "postgresql",
-    // connection: 'postgresql://pi:password@localhost:5432/levain-out',
-    connection: {
+const psqlConnection = isMac()
+  ? {
       host: "127.0.0.1",
       user: "andrew",
       password: "",
       database: "levain-out",
-    },
+    }
+  : "postgresql://pi:password@localhost:5432/levain-out";
+
+module.exports = {
+  development: {
+    client: "postgresql",
+    connection: psqlConnection,
     searchPath: ["knex", "public"],
     useNullAsDefault: true,
     migrations: {
