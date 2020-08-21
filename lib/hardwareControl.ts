@@ -1,4 +1,5 @@
 import dhtSensor from "node-dht-sensor";
+import { DhtSensorPromises } from "../definitions/node-dht-sensor";
 import Log from "../db/models/Log";
 import Session from "../db/models/Session";
 import { Gpio } from "onoff";
@@ -6,7 +7,7 @@ import { randomInt } from "./random";
 import isMac from "./isMac";
 
 const sw: Gpio = isMac() ? null : new Gpio(21, "out");
-const sensor = isMac() ? null : dhtSensor.promises;
+const sensor: DhtSensorPromises = isMac() ? null : dhtSensor.promises;
 const sensorType: number = 22;
 const sensorGPIO: number = 4;
 
@@ -53,7 +54,7 @@ const readSensor = async () => {
   const onOff = temperature > 22 ? 0 : 1;
   const s = await sw.write(onOff);
 
-  const add = await sess.$relatedQuery("logs").insert({
+  const add = await sess.$relatedQuery<Log>("logs").insert({
     temperature: temperature,
     humidity: humidity,
     lamp_on: !!onOff,
