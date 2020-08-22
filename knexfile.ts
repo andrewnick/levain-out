@@ -10,7 +10,7 @@ const psqlConnection = isMac()
     }
   : "postgresql://pi:password@localhost:5432/levain-out";
 
-module.exports = {
+export default {
   development: {
     client: "postgresql",
     connection: psqlConnection,
