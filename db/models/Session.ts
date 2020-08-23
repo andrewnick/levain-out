@@ -3,6 +3,8 @@ import Log from "./Log";
 
 class Session extends Model {
   id!: number;
+  type!: string;
+  status!: string;
   set_point_max!: number;
   set_point_min!: number;
 
@@ -15,6 +17,8 @@ class Session extends Model {
     type: "object",
     properties: {
       id: { type: "integer" },
+      type: { type: "string" },
+      status: { type: "string" },
       set_point_max: { type: "integer", default: 0 },
       set_point_min: { type: "integer", default: 0 },
     },

@@ -13,11 +13,11 @@ const API: string = `${host}://${domain}/api/graphql`;
 // Add headers and other config into the client
 const client: GraphQLClient = new GraphQLClient(API);
 
-export const query: (query: string) => Promise<unknown> = (query) =>
+export const query: <T>(query: string) => Promise<T> = (query) =>
   client.request(query);
 
-export const mutation: (
+export const mutation: <T>(
   mutationQuery: string,
-  variables: object
-) => Promise<unknown> = (mutationQuery, variables = {}) =>
+  variables?: object
+) => Promise<T> = (mutationQuery, variables = {}) =>
   client.request(mutationQuery, variables);
