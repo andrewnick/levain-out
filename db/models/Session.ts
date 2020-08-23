@@ -57,7 +57,7 @@ class Session extends Model {
     return session;
   }
 
-  async getSession(id) {
+  async getSession(id: number) {
     let session = await Session.query().where({ id: id }).first();
 
     // console.log(session);

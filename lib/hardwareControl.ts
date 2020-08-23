@@ -1,5 +1,5 @@
 import dhtSensor from "node-dht-sensor";
-import { DhtSensorPromises } from "../definitions/node-dht-sensor";
+import { DhtSensorPromises } from "../node-dht-sensor";
 import Log from "../db/models/Log";
 import Session from "../db/models/Session";
 import { Gpio } from "onoff";

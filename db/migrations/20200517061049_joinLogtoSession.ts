@@ -8,6 +8,6 @@ exports.up = function (knex: Knex, Promise: Promise<any>) {
 
 exports.down = function (knex: Knex, Promise: Promise<any>) {
   return knex.schema.alterTable("logs", function (table) {
-    table.dropForeign("session_id");
+    table.dropForeign(["session_id"]);
   });
 };
