@@ -40,7 +40,7 @@ class Log extends Model {
     },
   });
 
-  async add(temperature, humidity) {
+  async add(temperature: number, humidity: number) {
     return await Log.query().insert({
       temperature: temperature,
       humidity: humidity,
@@ -64,7 +64,7 @@ class Log extends Model {
 
   // Get n last log
   // e.g getNLastLog(2) get second to last log
-  async getNLastLog(n) {
+  async getNLastLog(n: number) {
     const logs = await Log.query();
 
     if (!logs.length) {

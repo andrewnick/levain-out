@@ -5,14 +5,14 @@ import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Info from "../components/Info";
 import Card from "../components/Card";
-import SetTemp from "../components/SetTemp";
+// import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query, mutation } from "../graphql/gqlClient";
-
+import Setting from "../db/models/Setting";
 interface IndexServerSideProps {
   log: { id: number; temperature: string; humidity: string };
   logs: Array<{ id: number; temperature: string; humidity: string }>;
-  setting: { set_point_max: string; set_point_min: string };
+  setting: Setting;
 }
 
 export const NAME_QUERY = `
@@ -54,7 +54,7 @@ const Home = ({ log, setting }) => {
         <div className="flex flex-wrap">
           <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
             <Card>
-              <Info temp={log.temperature} humidity={log.humidity} />
+              <Info temperature={log.temperature} humidity={log.humidity} />
               <button
                 onClick={() => mutation(SET_LED)}
                 className="w-full shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
@@ -63,11 +63,11 @@ const Home = ({ log, setting }) => {
               </button>
             </Card>
           </div>
-          <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
+          {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
             <Card>
               <SetTemp setting={setting} />
             </Card>
-          </div>
+          </div> */}
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
               <RecordingControl />

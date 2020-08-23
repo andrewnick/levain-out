@@ -24,8 +24,23 @@ const GET_LOGS = `
   }
 `;
 
+interface LogType {
+  logs: Array<{
+    id: number;
+    temperature: string;
+    humidity: string;
+    created_at: string;
+    lamp_on: string;
+  }>;
+}
+
+// interface SWRGql {
+//   data: unknown;
+//   error:
+// }
+
 const Graph = () => {
-  const { data, error } = useSWR(GET_LOGS, query, {
+  const { data, error } = useSWR<LogType, boolean>(GET_LOGS, query, {
     refreshInterval: 2000,
   });
 
@@ -33,15 +48,19 @@ const Graph = () => {
   if (!data) return <div>loading...</div>;
 
   const { logs } = data;
-  const maximaTemp = Math.max(...logs.map((d) => d.temperature));
-  const maximaHumidity = Math.max(...logs.map((d) => d.humidity));
-  const maximaLampOn = Math.max(...logs.map((d) => d.lamp_on));
-  const numberOfTicks = 8;
-  const normalisedValues = [...Array(numberOfTicks).keys()].map(
+  const maximaTemp: number = Math.max(
+    ...logs.map((d) => parseFloat(d.temperature))
+  );
+  const maximaHumidity: number = Math.max(
+    ...logs.map((d) => parseFloat(d.humidity))
+  );
+  const maximaLampOn: number = Math.max(
+    ...logs.map((d) => parseFloat(d.lamp_on))
+  );
+  const numberOfTicks: number = 8;
+  const normalisedValues: Array<number> = [...Array(numberOfTicks).keys()].map(
     (i) => (i + 1) / numberOfTicks
   );
-  console.log(normalisedValues);
-  console.log(logs);
 
   return (
     <div
