@@ -9,11 +9,14 @@ import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query, mutation } from "../graphql/gqlClient";
 
+interface IndexServerSideProps {
+  log: { id: number; temperature: string; humidity: string };
+  logs: Array<{ id: number; temperature: string; humidity: string }>;
+  setting: { set_point_max: string; set_point_min: string };
+}
+
 export const NAME_QUERY = `
   query {
-    users {
-      name
-    }
     log {
       id
       temperature
@@ -26,13 +29,6 @@ export const NAME_QUERY = `
   }
 `;
 
-// const NEW_TEMP = `
-// subscription onNewTemp  {
-//   newTemp {
-//     temperature
-//   }
-// }
-// `;
 const SET_LED = `
   mutation setLed  {
     setLed {
@@ -46,7 +42,7 @@ const Graph = dynamic(() => import("../components/Graph/index"), {
   ssr: false,
 });
 
-const Home = ({ users, log, setting }) => {
+const Home = ({ log, setting }) => {
   return (
     <div>
       <Head>
@@ -85,15 +81,14 @@ const Home = ({ users, log, setting }) => {
 };
 
 // This function gets called at build time
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   // Call an external API endpoint to get data
-  const data = await query(NAME_QUERY);
+  const { log, setting }: IndexServerSideProps = await query(NAME_QUERY);
   return {
     props: {
-      users: data.users,
-      log: data.log,
+      log: log,
       // logs: data.logs,
-      setting: data.setting,
+      setting: setting,
     },
   };
 };

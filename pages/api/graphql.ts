@@ -11,7 +11,6 @@ let readSensorInterval;
 
 const typeDefs = gql`
   type Query {
-    users: [User!]!
     log: Log!
     logs: [Log!]
     setting: Setting!
@@ -55,9 +54,6 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    users(parent, args, context) {
-      return [{ name: "Nextjs" }];
-    },
     log(parent, args, context) {
       return new Log().getNLastLog(3);
       return new Log().getLastLog();
@@ -121,7 +117,7 @@ const resolvers = {
     async pauseRecording(root, args) {
       console.log("pause Recording");
       const sess = await new Session().getCurrentSession();
-      Session.findById(sess.id).update({ status: "paused" });
+      Session.query().findById(sess.id).update({ status: "paused" });
       return { id: sess.id };
     },
     async stopRecording(root, args) {
