@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Info from "../components/Info";
 import Card from "../components/Card";
-// import SetTemp from "../components/SetTemp";
+import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query, mutation } from "../graphql/gqlClient";
 import Setting from "../db/models/Setting";
@@ -43,6 +43,8 @@ const Graph = dynamic(() => import("../components/Graph/index"), {
 });
 
 const Home = ({ log, setting }) => {
+  const duration: string = "1:00";
+  const recording: boolean = false;
   return (
     <div>
       <Head>
@@ -52,26 +54,36 @@ const Home = ({ log, setting }) => {
       <Header />
       <main className="container mx-auto">
         <div className="flex flex-wrap">
+          <div className="flex-initial w-100 min-w-full mb-8">
+            <Card>
+              {recording ? (
+                <>
+                  <Info
+                    temperature={log.temperature}
+                    humidity={log.humidity}
+                    duration={duration}
+                  />
+                  <Graph />
+                </>
+              ) : (
+                <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
+                  <Card>
+                    <SetTemp setting={setting} />
+                  </Card>
+                </div>
+              )}
+              <RecordingControl recording={recording} />
+            </Card>
+          </div>
           <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
             <Card>
-              <Info temperature={log.temperature} humidity={log.humidity} />
+              <h3>Manual override</h3>
               <button
                 onClick={() => mutation(SET_LED)}
                 className="w-full shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
               >
                 Toggle Light
               </button>
-            </Card>
-          </div>
-          {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-            <Card>
-              <SetTemp setting={setting} />
-            </Card>
-          </div> */}
-          <div className="flex-initial w-100 min-w-full mb-8">
-            <Card>
-              <RecordingControl />
-              <Graph />
             </Card>
           </div>
         </div>
