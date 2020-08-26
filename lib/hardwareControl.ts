@@ -6,7 +6,7 @@ import { Gpio } from "onoff";
 import { randomInt } from "./random";
 import isMac from "./isMac";
 
-const sw: Gpio = isMac() ? null : new Gpio(21, "out");
+const sw: Gpio | null = isMac() ? null : new Gpio(21, "out");
 const sensor: DhtSensorPromises = isMac() ? null : dhtSensor.promises;
 const sensorType: number = 22;
 const sensorGPIO: number = 4;

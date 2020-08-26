@@ -60,8 +60,6 @@ class Session extends Model {
   async getSession(id: number) {
     let session = await Session.query().where({ id: id }).first();
 
-    // console.log(session);
-
     if (!session) {
       session = await Session.query().orderBy("id", "desc").first();
     }

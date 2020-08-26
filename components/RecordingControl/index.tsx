@@ -17,23 +17,28 @@ const STOP_RECORDING = `
   }
 `;
 
-const RecordingControl = () => {
+const RecordingControl: React.FC<{
+  recording: boolean;
+}> = ({ recording = false }) => {
   return (
     <div>
-      <button
-        onClick={() => mutation(START_RECORDING)}
-        className="w-full shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-        type="button"
-      >
-        Start Recording
-      </button>
-      <button
-        onClick={() => mutation(STOP_RECORDING)}
-        className="w-full shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-        type="button"
-      >
-        Stop Recording
-      </button>
+      {recording ? (
+        <button
+          onClick={() => mutation(STOP_RECORDING)}
+          className="w-full shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+          type="button"
+        >
+          Stop Recording
+        </button>
+      ) : (
+        <button
+          onClick={() => mutation(START_RECORDING)}
+          className="w-full shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+          type="button"
+        >
+          Start Recording
+        </button>
+      )}
     </div>
   );
 };
