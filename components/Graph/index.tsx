@@ -7,60 +7,31 @@ import {
   VictoryScatter,
   VictoryVoronoiContainer,
   VictoryGroup,
+  VictoryContainer,
   VictoryTooltip,
 } from "victory";
-import useSWR from "swr";
-import { query } from "../../graphql/gqlClient";
-
-const GET_LOGS = `
-  query {
-    logs {
-      id
-      created_at
-      temperature
-      humidity
-      lamp_on
-    }
-  }
-`;
-
-interface LogType {
-  logs: Array<{
-    id: number;
-    temperature: string;
-    humidity: string;
-    created_at: string;
-    lamp_on: string;
-  }>;
-}
+import { LogType } from "@/types/global";
 
 // interface SWRGql {
 //   data: unknown;
 //   error:
 // }
 
-const Graph = () => {
-  const { data, error } = useSWR<LogType, boolean>(GET_LOGS, query, {
-    refreshInterval: 2000,
-  });
-
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
-
-  const { logs } = data;
-  const maximaTemp: number = Math.max(
-    ...logs.map((d) => parseFloat(d.temperature))
-  );
-  const maximaHumidity: number = Math.max(
-    ...logs.map((d) => parseFloat(d.humidity))
-  );
-  const maximaLampOn: number = Math.max(
-    ...logs.map((d) => parseFloat(d.lamp_on))
-  );
+const Graph: React.FC<{ logs: Array<LogType> }> = ({ logs }) => {
+  // const maximaTemp: number = Math.max(
+  //   ...logs.map((d) => parseFloat(d.temperature))
+  // );
+  // const maximaHumidity: number = Math.max(
+  //   ...logs.map((d) => parseFloat(d.humidity))
+  // );
+  // const maximaLampOn: number = Math.max(
+  //   ...logs.map((d) => parseFloat(d.lamp_on))
+  // );
   const numberOfTicks: number = 8;
-  const normalisedValues: Array<number> = [...Array(numberOfTicks).keys()].map(
-    (i) => (i + 1) / numberOfTicks
-  );
+  // const normalisedValues: Array<number> = [...Array(numberOfTicks).keys()].map(
+  //   (i) => (i + 1) / numberOfTicks
+  // );
+  console.log(logs);
 
   return (
     <div

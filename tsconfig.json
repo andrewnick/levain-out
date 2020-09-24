@@ -4,7 +4,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -14,7 +14,20 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "downlevelIteration": true,
-    "typeRoots": ["./node_modules/@types", "./definitions/node-dht-sensor.d.ts"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "./definitions/node-dht-sensor.d.ts"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/pages/*": ["pages/*"],
+      "@/graphql/*": ["graphql/*"],
+      "@/lib/*": ["lib/*"],
+      "@/types/*": ["types/*"],
+      "@/components/*": ["components/*"],
+      "@/db/*": ["db/*"],
+      "@/css/*": ["css/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
