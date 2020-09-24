@@ -1,13 +1,13 @@
 import dhtSensor from "node-dht-sensor";
 import { DhtSensorPromises } from "../node-dht-sensor";
-import Log from "../db/models/Log";
-import Session from "../db/models/Session";
+import Log from "@/db/models/Log";
+import Session from "@/db/models/Session";
 import { Gpio } from "onoff";
 import { randomInt } from "./random";
 import isMac from "./isMac";
 
 const sw: Gpio | null = isMac() ? null : new Gpio(21, "out");
-const sensor: DhtSensorPromises = isMac() ? null : dhtSensor.promises;
+const sensor: DhtSensorPromises | null = isMac() ? null : dhtSensor.promises;
 const sensorType: number = 22;
 const sensorGPIO: number = 4;
 
@@ -41,37 +41,27 @@ const readSensor = async () => {
     };
   }
 
-  const reading = await sensor.read(sensorType, sensorGPIO);
-  // console.log(reading);
+  // const reading = await sensor.read(sensorType, sensorGPIO);
+  // // console.log(reading);
 
-  const temperature = parseFloat(reading.temperature.toFixed(1));
-  const humidity = parseFloat(reading.humidity.toFixed(1));
+  // const temperature = parseFloat(reading.temperature.toFixed(1));
+  // const humidity = parseFloat(reading.humidity.toFixed(1));
 
-  const sess = await new Session().getCurrentSession();
+  // const sess = await new Session().getCurrentSession();
 
-  // const onOff = 1;
-  // const s = await sw.write(onOff);
-  const onOff = temperature > 22 ? 0 : 1;
-  const s = await sw.write(onOff);
-
-  const add = await sess.$relatedQuery<Log>("logs").insert({
-    temperature: temperature,
-    humidity: humidity,
-    lamp_on: !!onOff,
-  });
-
-  console.log(add);
-  // logs = await new Log().getAllLogs();
-  // console.log(logs);
-
-  // const add = await new Log().add(temperature, humidity);
-  // console.log(temperature);
-  // console.log(humidity);
-
-  // const onOff = temperature > 20 ? 0 : 1;
+  // // const onOff = 1;
+  // const onOff = temperature > 22 ? 0 : 1;
   // const s = await sw.write(onOff);
 
-  return reading;
+  // const add = await sess.$relatedQuery<Log>("logs").insert({
+  //   temperature: temperature,
+  //   humidity: humidity,
+  //   lamp_on: !!onOff,
+  // });
+
+  // console.log(add);
+
+  // return reading;
 };
 
 export default readSensor;

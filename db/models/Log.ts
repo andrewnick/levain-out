@@ -7,6 +7,8 @@ class Log extends Model {
   temperature?: number;
   humidity?: number;
   lamp_on?: boolean;
+  set_point_max?: number;
+  set_point_min?: number;
 
   static tableName = "logs";
 
@@ -24,6 +26,8 @@ class Log extends Model {
       temperature: { type: ["number", "null"] },
       humidity: { type: ["number", "null"] },
       lamp_on: { type: ["boolean", "null"] },
+      set_point_max: { type: ["number", "null"] },
+      set_point_min: { type: ["number", "null"] },
     },
   };
 
@@ -40,10 +44,17 @@ class Log extends Model {
     },
   });
 
-  async add(temperature: number, humidity: number) {
+  async add(
+    temperature: number,
+    humidity: number,
+    set_point_max: number,
+    set_point_min: number
+  ) {
     return await Log.query().insert({
-      temperature: temperature,
-      humidity: humidity,
+      temperature,
+      humidity,
+      set_point_max,
+      set_point_min,
     });
   }
 
@@ -56,6 +67,8 @@ class Log extends Model {
         created_at: 0,
         temperature: 0,
         humidity: 0,
+        set_point_max: 0,
+        set_point_min: 0,
       };
     }
 
