@@ -149,7 +149,7 @@ const Home: React.FC<{
               <RecordingControl recording={recording} />
             </Card>
           </div>
-          <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
+          {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
             <Card>
               <h3>Manual override</h3>
               <button
@@ -159,7 +159,7 @@ const Home: React.FC<{
                 Toggle Light
               </button>
             </Card>
-          </div>
+          </div> */}
         </div>
       </main>
     </div>
