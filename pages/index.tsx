@@ -18,6 +18,10 @@ const CustomGraph = dynamic(() => import("@/components/CustomGraph"), {
   ssr: false,
 });
 
+const TempGraph = dynamic(() => import("@/components/TempGraph"), {
+  ssr: false,
+});
+
 const Graph = dynamic(() => import("@/components/Graph"), {
   ssr: false,
 });
@@ -106,15 +110,15 @@ const Home: React.FC<{
   if (error) {
     LogGraph = <div>failed to load</div>;
   } else if (data) {
-    LogGraph = <Graph logs={data.logs} />;
     lastLog = data.logs[data.logs.length - 1];
     firstLog = data.logs[0];
     logTimeDifference = Duration.fromMillis(
       parseInt(lastLog.created_at) - parseInt(firstLog.created_at)
     );
+
+    LogGraph = <Graph logs={data.logs} firstLog={firstLog} lastLog={lastLog} />;
   }
 
-  const duration: string = "1:00";
   const recording: boolean = true;
   return (
     <div>
@@ -132,7 +136,6 @@ const Home: React.FC<{
                   <Info
                     temperature={parseFloat(lastLog.temperature)}
                     humidity={parseFloat(lastLog.humidity)}
-                    // duration={ms(logTimeDifference)}
                     duration={
                       logTimeDifference
                         ? logTimeDifference.toFormat("h:mm:ss")
