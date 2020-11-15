@@ -14,14 +14,6 @@ import Log from "../db/models/Log";
 import { LogType } from "@/types/global";
 import useSWR from "swr";
 
-const CustomGraph = dynamic(() => import("@/components/CustomGraph"), {
-  ssr: false,
-});
-
-const TempGraph = dynamic(() => import("@/components/TempGraph"), {
-  ssr: false,
-});
-
 const Graph = dynamic(() => import("@/components/Graph"), {
   ssr: false,
 });
@@ -29,9 +21,6 @@ interface IndexServerSideProps {
   log: Log;
   logs: Array<LogType>;
   setting: Setting;
-}
-interface LogProps {
-  logs: Array<LogType>;
 }
 
 export const NAME_QUERY = `
@@ -72,21 +61,6 @@ const GET_LOGS = `
     }
   }
 `;
-
-// interface LogType {
-//   logs: Array<{
-//     id: number;
-//     temperature: string;
-//     humidity: string;
-//     created_at: string;
-//     lamp_on: string;
-//   }>;
-// }
-
-// Do no server side render this
-// const Graph = dynamic(() => import("../components/Graph/index"), {
-//   ssr: false,
-// });
 
 const Home: React.FC<{
   log: Log;

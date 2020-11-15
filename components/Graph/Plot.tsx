@@ -33,12 +33,11 @@ const createTicks: (max: number, divisor: number) => Array<number> = (max, divis
 const Plot: React.FC<{ 
   data: Array<PlotDataType>, 
   label: string 
-  axisOffsetX: number 
   color: string,
   divisor: number,
   hideAxis?: boolean,
   other?: any
-}> = ({ data, label, axisOffsetX, color, divisor, hideAxis=false, ...other }) => {
+}> = ({ data, label, color, divisor, hideAxis=false, ...other }) => {
 
   const max: number = Math.max(
     ...data.map((datum) => datum.y)
