@@ -5,3 +5,8 @@ export interface LogType {
   created_at: string;
   lamp_on: string;
 }
+
+export interface PlotDataType {
+  x: number,
+  y: number
+}
