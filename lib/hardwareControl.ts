@@ -41,27 +41,27 @@ const readSensor = async () => {
     };
   }
 
-  // const reading = await sensor.read(sensorType, sensorGPIO);
-  // // console.log(reading);
+  const reading = await sensor.read(sensorType, sensorGPIO);
+  // console.log(reading);
 
-  // const temperature = parseFloat(reading.temperature.toFixed(1));
-  // const humidity = parseFloat(reading.humidity.toFixed(1));
+  const temperature = parseFloat(reading.temperature.toFixed(1));
+  const humidity = parseFloat(reading.humidity.toFixed(1));
 
-  // const sess = await new Session().getCurrentSession();
+  const sess = await new Session().getCurrentSession();
 
-  // // const onOff = 1;
-  // const onOff = temperature > 22 ? 0 : 1;
-  // const s = await sw.write(onOff);
+  // const onOff = 1;
+  const onOff = temperature > 22 ? 0 : 1;
+  const s = await sw.write(onOff);
 
-  // const add = await sess.$relatedQuery<Log>("logs").insert({
-  //   temperature: temperature,
-  //   humidity: humidity,
-  //   lamp_on: !!onOff,
-  // });
+  const add = await sess.$relatedQuery<Log>("logs").insert({
+    temperature: temperature,
+    humidity: humidity,
+    lamp_on: !!onOff,
+  });
 
-  // console.log(add);
+  console.log(add);
 
-  // return reading;
+  return reading;
 };
 
 export default readSensor;

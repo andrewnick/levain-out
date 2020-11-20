@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
@@ -11,6 +11,7 @@ import RecordingControl from "../components/RecordingControl";
 import { query, mutation } from "../graphql/gqlClient";
 import Setting from "../db/models/Setting";
 import Log from "../db/models/Log";
+import Session from "../db/models/Session";
 import { LogType } from "@/types/global";
 import useSWR from "swr";
 
@@ -77,6 +78,16 @@ const Home: React.FC<{
   );
   console.log(data);
 
+  const [isRecording, setIsRecording] = useState(false);
+
+  // useEffect(() => {
+  //   const setRecordingStatus = async () => {
+  //     const sess = await new Session().getCurrentSession();
+  //     setIsRecording(sess.status === 'started');
+  //   }
+  //   setRecordingStatus();
+  // }, [sess])
+
   let LogGraph = <div>loading...</div>;
   let lastLog = { temperature: "0", humidity: "0", created_at: "0" };
   let firstLog = { temperature: "0", humidity: "0", created_at: "0" };
@@ -93,7 +104,6 @@ const Home: React.FC<{
     LogGraph = <Graph logs={data.logs} firstLog={firstLog} lastLog={lastLog} />;
   }
 
-  const recording: boolean = true;
   return (
     <div>
       <Head>
@@ -105,7 +115,7 @@ const Home: React.FC<{
         <div className="flex flex-wrap">
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
-              {recording ? (
+              {isRecording ? (
                 <>
                   <Info
                     temperature={parseFloat(lastLog.temperature)}
@@ -119,11 +129,11 @@ const Home: React.FC<{
                   {LogGraph}
                 </>
               ) : (
-                <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-                  <SetTemp setting={setting} />
-                </div>
-              )}
-              <RecordingControl recording={recording} />
+                  <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
+                    <SetTemp setting={setting} />
+                  </div>
+                )}
+              <RecordingControl recording={isRecording} isRecording={setIsRecording} />
             </Card>
           </div>
           {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
