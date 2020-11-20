@@ -50,7 +50,7 @@ const readSensor = async () => {
   const sess = await new Session().getCurrentSession();
 
   // const onOff = 1;
-  const onOff = temperature > 22 ? 0 : 1;
+  const onOff = temperature > 28 ? 0 : 1;
   const s = await sw.write(onOff);
 
   const add = await sess.$relatedQuery<Log>("logs").insert({

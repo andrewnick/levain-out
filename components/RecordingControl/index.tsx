@@ -37,7 +37,7 @@ const RecordingControl: React.FC<{
       ) : (
           <button
             onClick={() => {
-              isRecording(false);
+              isRecording(true);
               mutation(START_RECORDING)
             }}
             className="w-full shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
