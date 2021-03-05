@@ -3,7 +3,7 @@
 module.exports = {
   development: {
     client: "postgresql",
-    connection: 'postgresql://pi:password@localhost:5432/levain-out',
+    connection: 'postgresql://pi:password@localhost:5432/puff',
     searchPath: ['knex', 'public'],
     useNullAsDefault: true,
     migrations: {

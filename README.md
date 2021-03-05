@@ -9,8 +9,10 @@ Knex - install globally `npm install knex -g
 
 * Node 
     - Do not use nvm as there are issues with sudo and RaspIO.
+    Install - 
     - https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/#installing-nodejs-and-npm-from-nodesource
-
+    Remove -
+    - https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/#uninstall-nodejs
 
 * Reset Database
     - `dropdb levain-out && createdb levain-out && knex migrate:latest`
