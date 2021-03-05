@@ -1,17 +1,27 @@
-// Update with your config settings.
+// Update with your config settcings.
+import isMac from "./lib/isMac";
 
-module.exports = {
+const psqlConnection = isMac()
+  ? {
+      host: "127.0.0.1",
+      user: "andrew",
+      password: "",
+      database: "levain-out",
+    }
+  : "postgresql://pi:password@localhost:5432/levain-out";
+
+export default {
   development: {
     client: "postgresql",
-    connection: 'postgresql://pi:password@localhost:5432/levain-out',
-    searchPath: ['knex', 'public'],
+    connection: psqlConnection,
+    searchPath: ["knex", "public"],
     useNullAsDefault: true,
     migrations: {
-      directory: __dirname + '/db/migrations',
+      directory: __dirname + "/db/migrations",
     },
     seeds: {
-      directory: __dirname + '/db/seeds'
-    }
+      directory: __dirname + "/db/seeds",
+    },
   },
 
   // staging: {
@@ -45,5 +55,4 @@ module.exports = {
   //     tableName: 'knex_migrations'
   //   }
   // }
-
 };
