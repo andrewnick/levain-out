@@ -8,11 +8,8 @@ import Info from "../components/Info";
 import Card from "../components/Card";
 import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
-import { query, mutation } from "../graphql/gqlClient";
-import Setting from "../dbknex/models/Setting";
-import Log from "../dbknex/models/Log";
-import Session from "../dbknex/models/Session";
-import { LogType } from "@/types/global";
+import { query } from "../graphql/gqlClient";;
+import { LogType, Log, Setting } from "@/types/global";
 import useSWR from "swr";
 
 const Graph = dynamic(() => import("@/components/Graph"), {

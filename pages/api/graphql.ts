@@ -1,17 +1,20 @@
 import { ApolloServer, gql } from "apollo-server-micro";
 import Cors from "micro-cors";
 import "reflect-metadata";
-import "../../db/init";
-import { Log } from "../../db/model/Log";
-import { Setting } from "../../db/model/Setting";
-import { Session } from "../../db/model/Session";
-import readSensor from "../../lib/hardwareControl";
+import { Log } from "@/db/model/Log";
+import { Setting } from "@/db/model/Setting";
+import { Session, StatusType } from "@/db/model/Session";
+import readSensor, { switchOnOff } from "../../lib/hardwareControl";
 import { createTypeormConn } from "@/lib/createTypeormConn";
 
 let readSensorInterval;
 
+const typeorm = async () => {
+  return await createTypeormConn();
+}
+
 try {
-  await createTypeormConn();
+  typeorm();
 } catch (e) {
   throw Error('DB connection not initialised');
 }
@@ -86,11 +89,6 @@ const resolvers = {
   },
   Mutation: {
     setSetting(root, args) {
-      const tempSetting = {
-        set_point: args.set_point,
-        set_point_tolerance: args.set_point_tolerance,
-      };
-
       const set = async () => {
         const setting = new Setting();
         setting.set_point = args.set_point;
@@ -104,34 +102,36 @@ const resolvers = {
       return Setting.getLatestSetting();
     },
     async startRecording(root, args) {
-      console.log("start Recording");
-      const setting = await new Setting().getLatestSetting();
+      console.log("Start Recording");
+      // const setting = await Setting.getLatestSetting();
 
       const sess = new Session();
-      sess.status = "started";
+      sess.status = StatusType.STARTED;
       sess.save();
 
-
-      // console.log(sess);
       readSensorInterval = setInterval(readSensor, 2000);
-      console.log(readSensorInterval);
+      // console.log(readSensorInterval);
 
       return { id: sess.id };
     },
     async pauseRecording(root, args) {
       console.log("pause Recording");
+
       const sess = await Session.currentSession();
-      Session.query().findById(sess.id).update({ status: "paused" });
+      sess.status = StatusType.PAUSED;
+      sess.save();
+
       return { id: sess.id };
     },
     async stopRecording(root, args) {
-      console.log("stop Recording");
-      console.log(readSensorInterval);
+      console.log("Stop Recording");
+      // console.log(readSensorInterval);
+
+      switchOnOff(0);
 
       const sess = await Session.currentSession();
-      const updatedSession = await Session.query().patchAndFetchById(sess.id, {
-        status: "finished",
-      });
+      sess.status = StatusType.FINISHED;
+      sess.save();
 
       clearInterval(readSensorInterval);
 

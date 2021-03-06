@@ -43,15 +43,8 @@ const readSensor = async () => {
   return reading;
 };
 
-const switchOnOff = async (onOff: BinaryValue) => {
+export const switchOnOff = async (onOff: BinaryValue) => {
   await sw.write(onOff);
-}
-
-// When we stop record 
-export const endSession = async () => {
-  // Turn acuator off
-  switchOnOff(1)
-  const sess = await Session.currentSession();
 }
 
 export default readSensor;

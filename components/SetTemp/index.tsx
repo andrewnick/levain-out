@@ -1,6 +1,6 @@
 import React from "react";
 import { mutation } from "../../graphql/gqlClient";
-import Setting from "../../dbknex/models/Setting";
+import { Setting } from "@/types";
 import {
   Formik,
   Form,
