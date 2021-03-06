@@ -8,12 +8,6 @@ exports.up = function (knex: Knex, Promise: Promise<any>) {
       useNative: true,
       enumName: "session_status",
     });
-    table.enu("type", ["temp_control", "temp_measure"], {
-      useNative: true,
-      enumName: "session_type",
-    });
-    table.decimal("set_point_min", 5, 1);
-    table.decimal("set_point_max", 5, 1);
   });
 };
 

@@ -35,17 +35,17 @@ const RecordingControl: React.FC<{
           Stop Recording
         </button>
       ) : (
-          <button
-            onClick={() => {
-              isRecording(true);
-              mutation(START_RECORDING)
-            }}
-            className="w-full shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-            type="button"
-          >
-            Start Recording
-          </button>
-        )}
+        <button
+          onClick={() => {
+            isRecording(true);
+            mutation(START_RECORDING)
+          }}
+          className="w-full shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+          type="button"
+        >
+          Start Recording
+        </button>
+      )}
     </div>
   );
 };

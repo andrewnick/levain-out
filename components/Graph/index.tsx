@@ -21,7 +21,7 @@ const Graph: React.FC<{ logs: Array<LogType> }> = ({ logs }) => {
 
   const lampData: Array<PlotDataType> = logs.map((log) => ({
     x: parseInt(log.created_at),
-    y: log.lamp_on === "true" ? 1 : 0
+    y: log.switch === "true" ? 1 : 0
   }));
 
   return (
@@ -33,23 +33,23 @@ const Graph: React.FC<{ logs: Array<LogType> }> = ({ logs }) => {
     >
       <VictoryChart scale={{ x: "time", y: "linear" }} domain={{ y: [0, 1] }}>
         <VictoryAxis />
-        <Plot 
-          data={tempData} 
+        <Plot
+          data={tempData}
           divisor={5}
-          color="#f56565" 
+          color="#f56565"
           label="Temp"
         />
-        <Plot 
-          data={humidityData} 
+        <Plot
+          data={humidityData}
           divisor={10}
-          color="#3574ca" 
+          color="#3574ca"
           orientation="right"
           label="Humidity"
         />
-        <Plot 
-          data={lampData} 
+        <Plot
+          data={lampData}
           divisor={1}
-          color="rgba(53,116, 202, 0.3)" 
+          color="rgba(53,116, 202, 0.3)"
           orientation="right"
           label="Lamp"
           hideAxis={true}
@@ -57,13 +57,13 @@ const Graph: React.FC<{ logs: Array<LogType> }> = ({ logs }) => {
 
         {/* Hack to display the VictoryLines within Plot */}
         <VictoryLine
-            data={logs}
-            x={(datum) => new Date(parseInt(datum.created_at))}
-            y={() => 0}
-            style={{
-              data: { opacity: 0 },
-            }}
-          />
+          data={logs}
+          x={(datum) => new Date(parseInt(datum.created_at))}
+          y={() => 0}
+          style={{
+            data: { opacity: 0 },
+          }}
+        />
       </VictoryChart>
     </div>
   );

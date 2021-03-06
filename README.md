@@ -13,7 +13,7 @@ Knex - install globally `npm install knex -g`
 
 
 * Reset Database
-    - `dropdb levain-out && createdb levain-out && knex migrate:latest`
+    - Sync db (only run this if is the first time) `yarn run typeorm schema:sync -c development`
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
 

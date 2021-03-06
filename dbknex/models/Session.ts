@@ -3,10 +3,7 @@ import Log from "./Log";
 
 class Session extends Model {
   id!: number;
-  type!: string;
   status!: string;
-  set_point_max!: number;
-  set_point_min!: number;
 
   static tableName = "sessions";
 
@@ -17,10 +14,7 @@ class Session extends Model {
     type: "object",
     properties: {
       id: { type: "integer" },
-      type: { type: "string" },
-      status: { type: "string" },
-      set_point_max: { type: "integer", default: 0 },
-      set_point_min: { type: "integer", default: 0 },
+      status: { type: "string" }
     },
   };
 
@@ -47,8 +41,6 @@ class Session extends Model {
       .orWhere({ status: "paused" })
       .orderBy("id", "desc")
       .first();
-
-    // console.log(session);
 
     if (!session) {
       session = await Session.query().orderBy("id", "desc").first();

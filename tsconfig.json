@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -14,21 +18,46 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "typeRoots": [
       "./node_modules/@types",
       "./definitions/node-dht-sensor.d.ts"
     ],
     "baseUrl": ".",
     "paths": {
-      "@/pages/*": ["pages/*"],
-      "@/graphql/*": ["graphql/*"],
-      "@/lib/*": ["lib/*"],
-      "@/types/*": ["types/*"],
-      "@/components/*": ["components/*"],
-      "@/db/*": ["db/*"],
-      "@/css/*": ["css/*"]
+      "@/pages/*": [
+        "pages/*"
+      ],
+      "@/graphql/*": [
+        "graphql/*"
+      ],
+      "@/lib/*": [
+        "lib/*"
+      ],
+      "@/types/*": [
+        "types/*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/db/*": [
+        "db/*"
+      ],
+      "@/css/*": [
+        "css/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "dbknex/knexfile.js",
+    "dbknex/knexfile.js",
+    "dbknex/knexfile.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

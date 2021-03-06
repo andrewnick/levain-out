@@ -1,13 +1,20 @@
 import { ApolloServer, gql } from "apollo-server-micro";
 import Cors from "micro-cors";
+import "reflect-metadata";
 import "../../db/init";
-import Log from "../../db/models/Log";
-import Setting from "../../db/models/Setting";
-import Session from "../../db/models/Session";
+import { Log } from "../../db/model/Log";
+import { Setting } from "../../db/model/Setting";
+import { Session } from "../../db/model/Session";
 import readSensor from "../../lib/hardwareControl";
-import toggleLED from "../../lib/led";
+import { createTypeormConn } from "@/lib/createTypeormConn";
 
 let readSensorInterval;
+
+try {
+  await createTypeormConn();
+} catch (e) {
+  throw Error('DB connection not initialised');
+}
 
 const typeDefs = gql`
   type Query {
@@ -17,7 +24,7 @@ const typeDefs = gql`
   }
   type Mutation {
     setLed: Led
-    setSetting(max: Int!, min: Int!): Setting
+    setSetting($set_point: Int!, $set_point_tolerance: Int!): Setting
     startRecording: Session
     pauseRecording: Session
     stopRecording: Session
@@ -33,13 +40,13 @@ const typeDefs = gql`
     created_at: String
     temperature: String
     humidity: String
-    lamp_on: String
+    switch: String
   }
   type Setting {
     id: Int
     created_at: String
-    set_point_max: String
-    set_point_min: String
+    set_point: String
+    set_point_tolerance: String
   }
   type Temp {
     temperature: String
@@ -55,58 +62,55 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     log(parent, args, context) {
-      return new Log().getNLastLog(3);
-      return new Log().getLastLog();
+      return Log.getLastLog();
     },
     async logs(parent, args, context) {
-      // const sess = await new Session().getCurrentSession();
-      const sess = await new Session().getSession(34);
+      // const sess = await Session.currentSession();
+      const sess = await Session.sessionById(34);
       // console.log(sess.id);
-      const logs = await sess.$relatedQuery("logs");
+      const logs = await sess.logs;
 
       return logs
         ? logs
         : {
-            id: 0,
-            created_at: 0,
-            temperature: 0,
-            humidity: 0,
-            lamp_on: false,
-          };
+          id: 0,
+          created_at: 0,
+          temperature: 0,
+          humidity: 0,
+          switch: false,
+        };
     },
     setting(parent, args, context) {
-      return new Setting().getLatestSetting();
+      return Setting.getLatestSetting();
     },
   },
   Mutation: {
-    async setLed(root, args) {
-      // readSensor();
-      const status = await toggleLED();
-      return { status: status ? "on" : "off" };
-    },
     setSetting(root, args) {
       const tempSetting = {
-        set_point_max: args.max,
-        set_point_min: args.min,
+        set_point: args.set_point,
+        set_point_tolerance: args.set_point_tolerance,
       };
 
       const set = async () => {
-        return await Setting.query().insert(tempSetting);
+        const setting = new Setting();
+        setting.set_point = args.set_point;
+        setting.set_point_tolerance = args.set_point_tolerance;
+        await setting.save();
+
+        return setting;
       };
 
       set();
-      return new Setting().getLatestSetting();
+      return Setting.getLatestSetting();
     },
     async startRecording(root, args) {
       console.log("start Recording");
       const setting = await new Setting().getLatestSetting();
 
-      const sess = await Session.query().insert({
-        type: "temp_measure",
-        status: "started",
-        set_point_min: setting.set_point_min,
-        set_point_max: setting.set_point_max,
-      });
+      const sess = new Session();
+      sess.status = "started";
+      sess.save();
+
 
       // console.log(sess);
       readSensorInterval = setInterval(readSensor, 2000);
@@ -116,7 +120,7 @@ const resolvers = {
     },
     async pauseRecording(root, args) {
       console.log("pause Recording");
-      const sess = await new Session().getCurrentSession();
+      const sess = await Session.currentSession();
       Session.query().findById(sess.id).update({ status: "paused" });
       return { id: sess.id };
     },
@@ -124,7 +128,7 @@ const resolvers = {
       console.log("stop Recording");
       console.log(readSensorInterval);
 
-      const sess = await new Session().getCurrentSession();
+      const sess = await Session.currentSession();
       const updatedSession = await Session.query().patchAndFetchById(sess.id, {
         status: "finished",
       });

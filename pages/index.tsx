@@ -9,15 +9,16 @@ import Card from "../components/Card";
 import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query, mutation } from "../graphql/gqlClient";
-import Setting from "../db/models/Setting";
-import Log from "../db/models/Log";
-import Session from "../db/models/Session";
+import Setting from "../dbknex/models/Setting";
+import Log from "../dbknex/models/Log";
+import Session from "../dbknex/models/Session";
 import { LogType } from "@/types/global";
 import useSWR from "swr";
 
 const Graph = dynamic(() => import("@/components/Graph"), {
   ssr: false,
 });
+
 interface IndexServerSideProps {
   log: Log;
   logs: Array<LogType>;
@@ -32,14 +33,14 @@ export const NAME_QUERY = `
       humidity
     }
     setting {
-      set_point_max
-      set_point_min
+      set_point
+      set_point_tolerance
     }
     logs {
       created_at
       temperature
       humidity
-      lamp_on
+      switch
     }
   }
 `;
@@ -58,7 +59,7 @@ const GET_LOGS = `
       created_at
       temperature
       humidity
-      lamp_on
+      switch
     }
   }
 `;
@@ -129,10 +130,10 @@ const Home: React.FC<{
                   {LogGraph}
                 </>
               ) : (
-                  <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-                    <SetTemp setting={setting} />
-                  </div>
-                )}
+                <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
+                  <SetTemp setting={setting} />
+                </div>
+              )}
               <RecordingControl recording={isRecording} isRecording={setIsRecording} />
             </Card>
           </div>

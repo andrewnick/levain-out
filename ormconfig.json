@@ -1,0 +1,27 @@
+[
+    {
+        "name": "development",
+        "type": "postgres",
+        "host": "localhost",
+        "port": 5432,
+        "username": "pi",
+        "password": "password",
+        "database": "levain-out",
+        "synchronize": true,
+        "logging": false,
+        "entities": [
+            "db/model/**/*.ts"
+        ],
+        "migrations": [
+            "db/migration/**/*.ts"
+        ],
+        "subscribers": [
+            "db/subscriber/**/*.ts"
+        ],
+        "cli": {
+            "entitiesDir": "db/model",
+            "migrationsDir": "db/migration",
+            "subscriptionDir": "db/subscriber"
+        }
+    }
+]

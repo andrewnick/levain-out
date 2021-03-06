@@ -6,7 +6,7 @@ exports.up = function (knex: Knex, Promise: Promise<any>) {
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.decimal("temperature", 5, 2);
     table.decimal("humidity", 5, 2);
-    table.boolean("lamp_on");
+    table.boolean("switch");
     table.integer("session_id");
   });
 };

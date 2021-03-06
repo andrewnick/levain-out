@@ -1,18 +1,18 @@
 // Update with your config settcings.
-import isMac from "./lib/isMac";
+import os from "os";
 
-const psqlConnection = isMac()
+const psqlConnection = os.platform() === "darwin"
   ? {
-      host: "127.0.0.1",
-      user: "andrew",
-      password: "",
-      database: "levain-out",
-    }
+    host: "127.0.0.1",
+    user: "andrew",
+    password: "",
+    database: "levain-out",
+  }
   : "postgresql://pi:password@localhost:5432/levain-out";
-
-export default {
+console.log(process.env.NODE_ENV);
+module.export = {
   development: {
-    client: "postgresql",
+    client: "pg",
     connection: psqlConnection,
     searchPath: ["knex", "public"],
     useNullAsDefault: true,

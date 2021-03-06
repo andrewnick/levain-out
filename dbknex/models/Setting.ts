@@ -2,8 +2,8 @@ import { Model } from "objection";
 
 class Setting extends Model {
   id!: number;
-  set_point_max!: number;
-  set_point_min!: number;
+  set_point!: number;
+  set_point_tolerance!: number;
 
   static tableName = "settings";
 
@@ -14,8 +14,8 @@ class Setting extends Model {
     type: "object",
     properties: {
       id: { type: "integer" },
-      set_point_max: { type: "integer", default: 0 },
-      set_point_min: { type: "integer", default: 0 },
+      set_point: { type: "integer", default: 0 },
+      set_point_tolerance: { type: "integer", default: 0 },
     },
   };
 
@@ -36,8 +36,8 @@ class Setting extends Model {
   getDefault() {
     return {
       id: 1,
-      set_point_max: 25,
-      set_point_min: 27,
+      set_point: 25,
+      set_point_tolerance: 27,
     };
   }
 }

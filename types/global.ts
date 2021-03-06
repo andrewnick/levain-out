@@ -3,7 +3,7 @@ export interface LogType {
   temperature: string;
   humidity: string;
   created_at: string;
-  lamp_on: string;
+  switch: string;
 }
 
 export interface PlotDataType {

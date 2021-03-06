@@ -9,7 +9,7 @@ import { PlotDataType } from "@/types/global";
 
 const highestTickValue: (max: number, divisor: number) => number = (max, divisor) => {
   const maxUpperTemp: number = Math.ceil(max);
-  const upperTempModulo: number =  maxUpperTemp % divisor;
+  const upperTempModulo: number = maxUpperTemp % divisor;
   return maxUpperTemp + (divisor - upperTempModulo);
 }
 
@@ -24,20 +24,21 @@ const createTicks: (max: number, divisor: number) => Array<number> = (max, divis
       index * divisor
     ];
   }
-  
+
   const normalizedTicks = ticks.map(tick => tick / upperValue);
 
   return normalizedTicks;
-} 
+}
 
-const Plot: React.FC<{ 
-  data: Array<PlotDataType>, 
-  label: string 
+const Plot: React.FC<{
+  data: Array<PlotDataType>,
+  label: string,
   color: string,
   divisor: number,
   hideAxis?: boolean,
+  orientation?: string,
   other?: any
-}> = ({ data, label, color, divisor, hideAxis=false, ...other }) => {
+}> = ({ data, label, color, divisor, hideAxis = false, ...other }) => {
 
   const max: number = Math.max(
     ...data.map((datum) => datum.y)
@@ -48,34 +49,34 @@ const Plot: React.FC<{
 
   return (
     <>
-        { !hideAxis &&
-            <VictoryAxis
-              {...other}
-              dependentAxis
-              label={label}
-              style={{
-                axis: { stroke: color },
-                tickLabels: { fill: color },
-              }}
-              tickValues={tempTicks}
-              tickFormat={(t) => t * upperValue}
-            />
-        }
-        <VictoryLine
+      { !hideAxis &&
+        <VictoryAxis
           {...other}
-          data={data}
-          interpolation="monotoneX"
-          x={(datum) => {
-            return new Date(datum.x);
-          }}
-          y={(datum) => {
-            return datum.y / maxima;
-          }}
+          dependentAxis
+          label={label}
           style={{
-            data: { stroke: color },
-            labels: { fill: color },
+            axis: { stroke: color },
+            tickLabels: { fill: color },
           }}
+          tickValues={tempTicks}
+          tickFormat={(t) => t * upperValue}
         />
+      }
+      <VictoryLine
+        {...other}
+        data={data}
+        interpolation="monotoneX"
+        x={(datum) => {
+          return new Date(datum.x);
+        }}
+        y={(datum) => {
+          return datum.y / maxima;
+        }}
+        style={{
+          data: { stroke: color },
+          labels: { fill: color },
+        }}
+      />
     </>
   );
 };
