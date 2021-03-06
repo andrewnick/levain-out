@@ -19,6 +19,18 @@ Knex - install globally `npm install knex -g
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
 
+### Install Glances
+https://glances.readthedocs.io/en/latest/install.html
+
+`pip install glances` and reset raspberry pi
+
+Run: `glances`
+
+#### Web server (Remote monitoring)
+`pip install bottle` or `sudo ap-get install python-bottle`
+
+Run: `glances -w` and go to `http://raspberrypi.local:61208/`
+
 ## Getting Started
 
 First, run the development server:

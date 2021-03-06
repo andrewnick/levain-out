@@ -27,7 +27,7 @@ MAX31855.prototype._read32 = function (callback) {
             if (!bytes || bytes.length != 4) {
                 throw new Error('MAX31855: Did not read expected number of bytes from device!');
             } else {
-                value = bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3];
+                const value = bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3];
                 console.log('Raw value: ', value);
                 callback(value);
             }
