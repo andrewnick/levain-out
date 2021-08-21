@@ -36,7 +36,6 @@ const Plot: React.FC<{
   color: string,
   divisor: number,
   hideAxis?: boolean,
-  orientation?: string,
   other?: any
 }> = ({ data, label, color, divisor, hideAxis = false, ...other }) => {
 
@@ -58,6 +57,7 @@ const Plot: React.FC<{
             axis: { stroke: color },
             tickLabels: { fill: color },
           }}
+          orientation="right"
           tickValues={tempTicks}
           tickFormat={(t) => t * upperValue}
         />

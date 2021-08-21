@@ -43,14 +43,12 @@ const Graph: React.FC<{ logs: Array<LogType> }> = ({ logs }) => {
           data={humidityData}
           divisor={10}
           color="#3574ca"
-          orientation="right"
           label="Humidity"
         />
         <Plot
           data={lampData}
           divisor={1}
           color="rgba(53,116, 202, 0.3)"
-          orientation="right"
           label="Lamp"
           hideAxis={true}
         />
