@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import isMac from "../lib/isMac";
+import isMac from "../server/lib/isMac";
 
 const port: number = 3000;
 const host: string = "http";

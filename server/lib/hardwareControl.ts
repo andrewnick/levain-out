@@ -1,10 +1,10 @@
 import dhtSensor from "node-dht-sensor";
-import { DhtSensorPromises } from "../node-dht-sensor";
-import { Log } from "@/db/model/Log";
-import { Session } from "@/db/model/Session";
+import { Log } from "../db/model/Log"
+import { Session } from "../db/model/Session";
 import { Gpio, BinaryValue } from "onoff";
 import { randomInt } from "./random";
 import isMac from "./isMac";
+import { DhtSensorPromises } from "server/node-dht-sensor";
 
 const sw: Gpio | null = isMac() ? null : new Gpio(21, "out");
 const sensor: DhtSensorPromises | null = isMac() ? null : dhtSensor.promises;

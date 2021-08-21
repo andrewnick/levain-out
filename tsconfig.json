@@ -33,7 +33,7 @@
         "graphql/*"
       ],
       "@/lib/*": [
-        "lib/*"
+        "server/lib/*"
       ],
       "@/types/*": [
         "types/*"
