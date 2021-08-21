@@ -1,7 +1,12 @@
-import express  from 'express'
-import { ApolloServer }  from 'apollo-server-express'
+import express from 'express'
+import { ApolloServer } from 'apollo-server-express'
 import typeDefs from './typeDefs'
 import resolvers from './resolvers'
+import { createTypeormConn } from "./lib/createTypeormConn";
+
+const typeorm = async () => {
+  return await createTypeormConn();
+}
 
 const startApolloServer = async () => {
 
@@ -16,4 +21,10 @@ const startApolloServer = async () => {
   return { server, app };
 }
 
-startApolloServer()
+try {
+  typeorm();
+  startApolloServer()
+} catch (e) {
+  throw Error('DB connection not initialised');
+}
+

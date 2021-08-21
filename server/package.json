@@ -6,8 +6,8 @@
   "scripts": {
     "start": "nodemon app.ts",
     "typeorm": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' node --require ts-node/register node_modules/typeorm/cli.js",
-    "migrate": "yarn run typeorm migration:run -f ormconfig.json -c development",
-    "make-migration": "yarn run typeorm migration:generate -f ormconfig.json -c development"
+    "migrate": "yarn run typeorm migration:run -f ormconfig.json",
+    "make-migration": "yarn run typeorm migration:generate -f ormconfig.json"
   },
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +24,7 @@
     "node-dht-sensor": "0.4.3",
     "onoff": "false6.0.3",
     "pg": "false8.7.1",
+    "reflect-metadata": "^0.1.13",
     "typeorm": "false0.2.37"
   }
 }

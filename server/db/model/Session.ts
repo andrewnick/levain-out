@@ -25,7 +25,7 @@ export class Session extends BaseEntity {
 
     static sessionById(id: number) {
         let session = this.createQueryBuilder("session")
-            .where("user.id = :id ", { id: id })
+            .where("session.id = :id ", { id: id })
             .getOne();
 
         if (!session) {

@@ -3,47 +3,47 @@ import { Log } from "./db/model/Log";
 import { Setting } from "./db/model/Setting";
 import { Session, StatusType } from "./db/model/Session";
 import readSensor, { switchOnOff } from "./lib/hardwareControl";
-import { createTypeormConn } from "./lib/createTypeormConn";
 
 let readSensorInterval;
 
-const typeorm = async () => {
-  return await createTypeormConn();
-}
-
-try {
-  typeorm();
-} catch (e) {
-  throw Error('DB connection not initialised');
-}
-
 export default {
   Query: {
-    log(parent, args, context) {
-      return Log.getLastLog();
+    async log(parent, args, context) {
+      try {
+        const log = Log.getLastLog();
+        return log
+      } catch (e) {
+        console.log(e);
+      }
+      return null
     },
     async logs(parent, args, context) {
-      // const sess = await Session.currentSession();
-      const sess = await Session.sessionById(34);
-      // console.log(sess.id);
-      const logs = await sess.logs;
+      const emptyLog = [{
+        id: 0,
+        created_at: 0,
+        temperature: 0,
+        humidity: 0,
+        switch: false,
+      }]
 
-      return logs
-        ? logs
-        : {
-          id: 0,
-          created_at: 0,
-          temperature: 0,
-          humidity: 0,
-          switch: false,
-        };
+      try {
+        const sess = await Session.currentSession();
+        // const sess = await Session.sessionById(2);
+        // console.log(sess.id);
+        const logs = await sess.logs;
+        return logs || emptyLog
+      } catch (e) {
+        console.log(e);
+      }
+
+      return emptyLog
     },
     setting(parent, args, context) {
       return Setting.getLatestSetting();
     },
   },
   Mutation: {
-    setSetting(root, args) {
+    async setSetting(root, args) {
       const set = async () => {
         const setting = new Setting();
         setting.set_point = args.set_point;
@@ -53,44 +53,74 @@ export default {
         return setting;
       };
 
-      set();
+      try {
+        await set();
+      } catch (e) {
+        console.log(e);
+      }
+
       return Setting.getLatestSetting();
     },
     async startRecording(root, args) {
       console.log("Start Recording");
-      // const setting = await Setting.getLatestSetting();
+      try {
+        // const setting = await Setting.getLatestSetting();
 
-      const sess = new Session();
-      sess.status = StatusType.STARTED;
-      sess.save();
+        const sess = new Session();
+        sess.status = StatusType.STARTED;
+        sess.save();
 
-      readSensorInterval = setInterval(readSensor, 2000);
-      // console.log(readSensorInterval);
+        readSensorInterval = setInterval(readSensor, 2000);
+        // console.log(readSensorInterval);
 
-      return { id: sess.id };
+        return { id: sess.id };
+      } catch (e) {
+        console.log(e);
+      }
+
+      return null
     },
     async pauseRecording(root, args) {
       console.log("pause Recording");
+      try {
+        const sess = await Session.currentSession();
+        sess.status = StatusType.PAUSED;
+        sess.save();
 
-      const sess = await Session.currentSession();
-      sess.status = StatusType.PAUSED;
-      sess.save();
+        return { id: sess.id };
+      } catch (e) {
+        console.log(e);
+      }
 
-      return { id: sess.id };
+      return null
     },
     async stopRecording(root, args) {
+
       console.log("Stop Recording");
       // console.log(readSensorInterval);
+      try {
+        switchOnOff(0);
 
-      switchOnOff(0);
+        const sess = await Session.currentSession();
+        sess.status = StatusType.FINISHED;
+        sess.save();
 
-      const sess = await Session.currentSession();
-      sess.status = StatusType.FINISHED;
-      sess.save();
+        clearInterval(readSensorInterval);
 
-      clearInterval(readSensorInterval);
+        return { id: sess.id };
+      } catch (e) {
+        console.log(e);
+      }
 
-      return { id: sess.id };
+      return null
     },
+    async on(root, args) {
+      switchOnOff(1);
+      return true
+    },
+    async off(root, args) {
+      switchOnOff(0);
+      return false
+    }
   },
 };

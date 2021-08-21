@@ -1,4 +1,4 @@
-import { gql }  from 'apollo-server-express'
+import { gql } from 'apollo-server-express'
 
 export default gql`
   type Query {
@@ -12,6 +12,8 @@ export default gql`
     startRecording: Session
     pauseRecording: Session
     stopRecording: Session
+    on: Boolean
+    off: Boolean
   }
   type Subscription {
     newTemp: Temp
