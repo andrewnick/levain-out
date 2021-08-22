@@ -26,6 +26,8 @@ export default {
         switch: false,
       }]
 
+      return emptyLog
+
       try {
         const sess = await Session.currentSession();
         // const sess = await Session.sessionById(2);
@@ -39,7 +41,11 @@ export default {
       return emptyLog
     },
     setting(parent, args, context) {
-      return Setting.getLatestSetting();
+      return {
+        set_point: 7,
+        set_point_tolerance: 5
+      }
+      // Setting.getLatestSetting();
     },
   },
   Mutation: {
