@@ -13,17 +13,17 @@ interface Graph {
 
 const Graph = ({ logs }: Graph) => {
 
-  const tempData: Array<PlotDataType> = logs.map((log) => ({
+  const tempData: PlotDataType[] = logs.map((log) => ({
     x: parseInt(log.created_at),
     y: parseFloat(log.temperature)
   }));
 
-  const humidityData: Array<PlotDataType> = logs.map((log) => ({
+  const humidityData: PlotDataType[] = logs.map((log) => ({
     x: parseInt(log.created_at),
     y: parseFloat(log.humidity)
   }));
 
-  const lampData: Array<PlotDataType> = logs.map((log) => ({
+  const lampData: PlotDataType[] = logs.map((log) => ({
     x: parseInt(log.created_at),
     y: log.switch === "true" ? 1 : 0
   }));

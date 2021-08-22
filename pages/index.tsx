@@ -99,7 +99,8 @@ const Home: React.FC<{
       parseInt(lastLog.created_at) - parseInt(firstLog.created_at)
     );
 
-    LogGraph = <Graph logs={data.logs} firstLog={firstLog} lastLog={lastLog} />;
+    LogGraph = <Graph logs={data.logs} />;
+    // LogGraph = <Graph logs={data.logs} firstLog={firstLog} lastLog={lastLog} />;
   }
 
   return (
