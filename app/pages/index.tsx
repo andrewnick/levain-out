@@ -51,12 +51,12 @@ const GET_LOGS = `
 `;
 
 interface Home {
-  log: Log;
-  setting: Setting;
-  initialLogs: LogType[];
+  // log: Log;
+  // setting: Setting;
+  // initialLogs: LogType[];
 }
 
-const Home = ({ log, setting, initialLogs }: Home) => {
+const Home = ({ }: Home) => {
   const { data, error } = useSWR<{ logs: Array<LogType> }, boolean>(
     GET_LOGS,
     query,
@@ -64,6 +64,10 @@ const Home = ({ log, setting, initialLogs }: Home) => {
       refreshInterval: 2000,
       // initialData: initialLogs,
     }
+  );
+  const { data: {setting} } = useSWR<{ setting: Setting }, boolean>(
+    NAME_QUERY,
+    query,
   );
   console.log(data);
 
@@ -120,7 +124,7 @@ const Home = ({ log, setting, initialLogs }: Home) => {
                 </>
               ) : (
                 <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-                  <SetTemp set_point_tolerance={setting.set_point_tolerance} set_point={setting.set_point} />
+                  {setting && <SetTemp set_point_tolerance={setting.set_point_tolerance} set_point={setting.set_point} />}
                 </div>
               )}
               <RecordingControl recording={isRecording} isRecording={setIsRecording} />
@@ -143,18 +147,18 @@ const Home = ({ log, setting, initialLogs }: Home) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { log, setting, logs: initialLogs }: IndexServerSideProps = await query(
-    NAME_QUERY
-  );
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const { log, setting, logs: initialLogs }: IndexServerSideProps = await query(
+//     NAME_QUERY
+//   );
 
-  return {
-    props: {
-      // log,
-      // initialLogs,
-      setting,
-    },
-  };
-};
+//   return {
+//     props: {
+//       // log,
+//       // initialLogs,
+//       setting,
+//     },
+//   };
+// };
 
 export default Home;
