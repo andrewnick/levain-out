@@ -50,25 +50,24 @@ const GET_LOGS = `
   }
 `;
 
-interface Home {
-  // log: Log;
-  // setting: Setting;
-  // initialLogs: LogType[];
-}
+// interface Home {
+//   // log: Log;
+//   // setting: Setting;
+//   // initialLogs: LogType[];
+// }
 
-const Home = ({ }: Home) => {
+const Home = () => {
   const { data, error } = useSWR<{ logs: Array<LogType> }, boolean>(
     GET_LOGS,
     query,
     {
       refreshInterval: 2000,
-      // initialData: initialLogs,
     }
   );
-  const { data: {setting} } = useSWR<{ setting: Setting }, boolean>(
-    NAME_QUERY,
-    query,
-  );
+  // const { data: {setting}, error: settingError } = useSWR<{ setting: Setting }, boolean>(
+  //   NAME_QUERY,
+  //   query,
+  // );
   console.log(data);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -109,7 +108,7 @@ const Home = ({ }: Home) => {
         <div className="flex flex-wrap">
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
-              {isRecording ? (
+              {isRecording && (
                 <>
                   <Info
                     temperature={parseFloat(lastLog.temperature)}
@@ -122,11 +121,8 @@ const Home = ({ }: Home) => {
                   />
                   {LogGraph}
                 </>
-              ) : (
-                <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-                  {setting && <SetTemp set_point_tolerance={setting.set_point_tolerance} set_point={setting.set_point} />}
-                </div>
               )}
+ 
               <RecordingControl recording={isRecording} isRecording={setIsRecording} />
             </Card>
           </div>
