@@ -20,7 +20,6 @@
     "graphql": "15.0.0",
     "graphql-request": "1.8.2",
     "graphql-subscriptions": "1.1.0",
-    "knex": "0.95.1",
     "luxon": "1.25.0",
     "micro": "9.3.4",
     "micro-cors": "0.1.1",
