@@ -7,7 +7,11 @@ import {
 import { LogType, PlotDataType } from "@/types/global";
 import Plot from "./Plot";
 
-const Graph: React.FC<{ logs: Array<LogType> }> = ({ logs }) => {
+interface Graph {
+  logs: LogType[]
+}
+
+const Graph = ({ logs }: Graph) => {
 
   const tempData: Array<PlotDataType> = logs.map((log) => ({
     x: parseInt(log.created_at),

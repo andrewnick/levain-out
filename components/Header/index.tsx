@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header: React.FC = () => {
+const Header = () => {
   return (
     <header className="flex items-center justify-between flex-wrap bg-teal-500 p-6 mb-8">
       <div className="container mx-auto">

@@ -1,9 +1,7 @@
 import React from "react";
 import {
   VictoryLine,
-  VictoryAxis,
-  VictoryGroup,
-  VictoryLabel,
+  VictoryAxis
 } from "victory";
 import { PlotDataType } from "@/types/global";
 
@@ -48,7 +46,7 @@ const Plot: React.FC<{
 
   return (
     <>
-      { !hideAxis &&
+      {!hideAxis &&
         <VictoryAxis
           {...other}
           dependentAxis

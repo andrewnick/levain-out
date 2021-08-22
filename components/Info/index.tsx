@@ -1,10 +1,12 @@
 import React from "react";
 
-const Info: React.FC<{
-  temperature: number | undefined;
-  humidity: number | undefined;
+interface Info {
+  temperature?: number;
+  humidity?: number;
   duration: string;
-}> = ({ temperature, humidity, duration }) => {
+}
+
+const Info = ({ temperature, humidity, duration }: Info) => {
   return (
     <form className="w-full max-w-lg mx-auto">
       <div className="flex flex-wrap -mx-3 mt-3">

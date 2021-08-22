@@ -17,10 +17,12 @@ const STOP_RECORDING = `
   }
 `;
 
-const RecordingControl: React.FC<{
+interface RecordingControl {
   isRecording: Function,
-  recording: boolean;
-}> = ({ isRecording, recording = false }) => {
+  recording?: boolean;
+}
+
+const RecordingControl = ({ isRecording, recording = false }: RecordingControl) => {
   return (
     <div>
       {recording ? (
