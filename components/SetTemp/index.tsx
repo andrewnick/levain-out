@@ -1,6 +1,6 @@
 import React from "react";
 import { mutation } from "../../graphql/gqlClient";
-import { Setting } from "@/types";
+import { Setting } from "@/types/global";
 import {
   Formik,
   Form,
