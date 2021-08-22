@@ -19,28 +19,35 @@ const readSensor = async () => {
     };
   }
 
-  const reading = await sensor.read(sensorType, sensorGPIO);
+  try {
+    const reading = await sensor.read(sensorType, sensorGPIO);
 
-  const temperature = parseFloat(reading.temperature.toFixed(1));
-  const humidity = parseFloat(reading.humidity.toFixed(1));
+    const temperature = parseFloat(reading.temperature.toFixed(1));
+    const humidity = parseFloat(reading.humidity.toFixed(1));
 
-  const sess = await Session.currentSession();
+    const sess = await Session.currentSession();
 
-  const onOff: BinaryValue = temperature > 28 ? 1 : 0;
+    const onOff: BinaryValue = temperature > 28 ? 1 : 0;
 
-  await switchOnOff(onOff);
+    await switchOnOff(onOff);
 
-  const log = new Log();
-  log.temperature = temperature;
-  log.humidity = humidity;
-  log.switch = !!onOff;
-  log.session = sess;
+    const log = new Log();
+    log.temperature = temperature;
+    log.humidity = humidity;
+    log.switch = !!onOff;
+    log.session = sess;
 
-  await log.save();
+    await log.save();
 
-  console.log(log);
+    console.log(log);
 
-  return reading;
+    return reading;
+  } catch (e) {
+    console.log('Error reading Sensor', e);
+
+  }
+
+  return
 };
 
 export const switchOnOff = async (onOff: BinaryValue) => {

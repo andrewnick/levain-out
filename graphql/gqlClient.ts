@@ -4,9 +4,10 @@ import isMac from "../server/lib/isMac";
 const port: number = 3000;
 const host: string = "http";
 
-const origin: string = process.browser
-  ? window.location.origin
-  : `${host}://localhost:${port}`;
+// const origin: string = process.browser
+//   ? window.location.origin
+//   : `${host}://localhost:${port}`;
+const origin: string = `${host}://localhost:${port}`;
 
 const API: string = `${origin}/api/graphql`;
 
@@ -20,4 +21,4 @@ export const mutation: <T>(
   mutationQuery: string,
   variables?: object
 ) => Promise<T> = (mutationQuery, variables = {}) =>
-  client.request(mutationQuery, variables);
+    client.request(mutationQuery, variables);
