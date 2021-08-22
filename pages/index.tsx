@@ -61,11 +61,13 @@ const GET_LOGS = `
   }
 `;
 
-const Home: React.FC<{
+interface Home {
   log: Log;
   setting: Setting;
-  initialLogs: Array<LogType>;
-}> = ({ log, setting, initialLogs }) => {
+  initialLogs: LogType[];
+}
+
+const Home = ({ log, setting, initialLogs }: Home) => {
   const { data, error } = useSWR<{ logs: Array<LogType> }, boolean>(
     GET_LOGS,
     query,
@@ -129,7 +131,7 @@ const Home: React.FC<{
                 </>
               ) : (
                 <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-                  <SetTemp setting={setting} />
+                  <SetTemp set_point_tolerance={setting.set_point_tolerance} set_point={setting.set_point} />
                 </div>
               )}
               <RecordingControl recording={isRecording} isRecording={setIsRecording} />
@@ -152,12 +154,11 @@ const Home: React.FC<{
   );
 };
 
-// This function gets called at build time
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  // Call an external API endpoint to get data
+export const getServerSideProps: GetServerSideProps = async () => {
   const { log, setting, logs: initialLogs }: IndexServerSideProps = await query(
     NAME_QUERY
   );
+
   return {
     props: {
       log,
