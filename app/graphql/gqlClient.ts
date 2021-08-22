@@ -1,6 +1,6 @@
 import { GraphQLClient } from "graphql-request";
 
-const port: number = 3000;
+const port: number = 4000;
 const host: string = "http";
 
 // const origin: string = process.browser
@@ -8,7 +8,7 @@ const host: string = "http";
 //   : `${host}://localhost:${port}`;
 const origin: string = `${host}://localhost:${port}`;
 
-const API: string = `${origin}/api/graphql`;
+const API: string = `${origin}/graphql`;
 
 // Add headers and other config into the client
 const client: GraphQLClient = new GraphQLClient(API);

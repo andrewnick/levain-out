@@ -12,7 +12,7 @@ import { query } from "../graphql/gqlClient";;
 import { LogType, Log, Setting } from "@/types/global";
 import useSWR from "swr";
 
-const Graph = dynamic(() => import("@/components/Graph"), {
+const Graph = dynamic(() => import("../components/Graph"), {
   ssr: false,
 });
 
@@ -24,20 +24,9 @@ interface IndexServerSideProps {
 
 export const NAME_QUERY = `
   query {
-    log {
-      id
-      temperature
-      humidity
-    }
     setting {
       set_point
       set_point_tolerance
-    }
-    logs {
-      created_at
-      temperature
-      humidity
-      switch
     }
   }
 `;
@@ -161,8 +150,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
-      log,
-      initialLogs,
+      // log,
+      // initialLogs,
       setting,
     },
   };
