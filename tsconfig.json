@@ -27,7 +27,7 @@
     "baseUrl": ".",
     "paths": {
       "@/pages/*": [
-        "app/pages/*es/*"
+        "app/pages/*"
       ],
       "@/graphql/*": [
         "app/graphql/*"
@@ -52,10 +52,7 @@
   "include": [
     "app/next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "dbknex/knexfile.js",
-    "dbknex/knexfile.js",
-    "dbknex/knexfile.js"
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"

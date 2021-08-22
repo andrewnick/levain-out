@@ -3,7 +3,7 @@ import {
   VictoryLine,
   VictoryAxis
 } from "victory";
-import { PlotDataType } from "@/types/global";
+import { PlotDataType } from "../../../types/global";
 
 const highestTickValue: (max: number, divisor: number) => number = (max, divisor) => {
   const maxUpperTemp: number = Math.ceil(max);

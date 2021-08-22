@@ -9,10 +9,10 @@ import Card from "../components/Card";
 import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query } from "../graphql/gqlClient";;
-import { LogType, Log, Setting } from "@/types/global";
+import { LogType, Log, Setting } from "../../types/global";
 import useSWR from "swr";
 
-const Graph = dynamic(() => import("@/components/Graph"), {
+const Graph = dynamic(() => import("../components/Graph"), {
   ssr: false,
 });
 
@@ -24,20 +24,9 @@ interface IndexServerSideProps {
 
 export const NAME_QUERY = `
   query {
-    log {
-      id
-      temperature
-      humidity
-    }
     setting {
       set_point
       set_point_tolerance
-    }
-    logs {
-      created_at
-      temperature
-      humidity
-      switch
     }
   }
 `;
@@ -61,21 +50,24 @@ const GET_LOGS = `
   }
 `;
 
-interface Home {
-  log: Log;
-  setting: Setting;
-  initialLogs: LogType[];
-}
+// interface Home {
+//   // log: Log;
+//   // setting: Setting;
+//   // initialLogs: LogType[];
+// }
 
-const Home = ({ log, setting, initialLogs }: Home) => {
+const Home = () => {
   const { data, error } = useSWR<{ logs: Array<LogType> }, boolean>(
     GET_LOGS,
     query,
     {
       refreshInterval: 2000,
-      // initialData: initialLogs,
     }
   );
+  // const { data: {setting}, error: settingError } = useSWR<{ setting: Setting }, boolean>(
+  //   NAME_QUERY,
+  //   query,
+  // );
   console.log(data);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -116,7 +108,7 @@ const Home = ({ log, setting, initialLogs }: Home) => {
         <div className="flex flex-wrap">
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
-              {isRecording ? (
+              {isRecording && (
                 <>
                   <Info
                     temperature={parseFloat(lastLog.temperature)}
@@ -129,11 +121,8 @@ const Home = ({ log, setting, initialLogs }: Home) => {
                   />
                   {LogGraph}
                 </>
-              ) : (
-                <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pl-4 order-last sm:order-none">
-                  <SetTemp set_point_tolerance={setting.set_point_tolerance} set_point={setting.set_point} />
-                </div>
               )}
+ 
               <RecordingControl recording={isRecording} isRecording={setIsRecording} />
             </Card>
           </div>
@@ -154,18 +143,18 @@ const Home = ({ log, setting, initialLogs }: Home) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { log, setting, logs: initialLogs }: IndexServerSideProps = await query(
-    NAME_QUERY
-  );
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const { log, setting, logs: initialLogs }: IndexServerSideProps = await query(
+//     NAME_QUERY
+//   );
 
-  return {
-    props: {
-      log,
-      initialLogs,
-      setting,
-    },
-  };
-};
+//   return {
+//     props: {
+//       // log,
+//       // initialLogs,
+//       setting,
+//     },
+//   };
+// };
 
 export default Home;

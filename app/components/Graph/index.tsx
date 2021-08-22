@@ -4,7 +4,7 @@ import {
   VictoryLine,
   VictoryAxis,
 } from "victory";
-import { LogType, PlotDataType } from "@/types/global";
+import { LogType, PlotDataType } from "../../../types/global";
 import Plot from "./Plot";
 
 interface Graph {
