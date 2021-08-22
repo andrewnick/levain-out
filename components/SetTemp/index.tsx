@@ -16,7 +16,7 @@ const SET_SETTING = `
   }
 `;
 
-const SetTemp: React.FC<{ setting: Setting }> = ({ setting }) => {
+const SetTemp = ({ setting }: Setting) => {
   //   const { loading, error, data, fetchMore, networkStatus } = useQuery(
   //     SETTING_QUERY
   //   );
