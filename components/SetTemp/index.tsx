@@ -16,7 +16,7 @@ const SET_SETTING = `
   }
 `;
 
-const SetTemp = ({ setting }: Setting) => {
+const SetTemp = ({ set_point_tolerance, set_point }: Setting) => {
   //   const { loading, error, data, fetchMore, networkStatus } = useQuery(
   //     SETTING_QUERY
   //   );
@@ -28,8 +28,7 @@ const SetTemp = ({ setting }: Setting) => {
   //   }
   //   if (loading) return <div>Loading</div>;
 
-  console.log(setting);
-  const { set_point_tolerance, set_point }: Setting = setting;
+  console.log({ set_point_tolerance, set_point });
 
   return (
     <Formik
