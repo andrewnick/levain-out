@@ -9,7 +9,7 @@ import Card from "../components/Card";
 import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query } from "../graphql/gqlClient";;
-import { LogType, Log, Setting } from "@/types/global";
+import { LogType, Log, Setting } from "../../types/global";
 import useSWR from "swr";
 
 const Graph = dynamic(() => import("../components/Graph"), {
