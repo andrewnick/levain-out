@@ -16,13 +16,13 @@ export class Log extends BaseEntity {
     @Column()
     switch: boolean;
 
-    @Column()
+    @Column({ default: 28 })
     set_point: number;
 
-    @Column()
-    set_point_tolerence: number;
+    @Column({ default: 5 })
+    set_point_tolerance: number;
 
-    @ManyToOne(() => Session, session => session.logs)
+    @ManyToOne(() => Session, session => session.logs, { eager: true })
     session: Session;
 
     static getLastLog() {

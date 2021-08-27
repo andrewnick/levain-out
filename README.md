@@ -11,7 +11,7 @@
 
 
 * Reset Database
-    - Sync db (only run this if is the first time) `yarn run typeorm schema:sync -c development`
+    - Sync db (only run this if is the first time) `yarn run typeorm schema:sync -c default`
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
 

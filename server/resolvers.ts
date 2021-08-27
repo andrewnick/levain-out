@@ -26,13 +26,15 @@ export default {
         switch: false,
       }]
 
-      return emptyLog
-
       try {
-        const sess = await Session.currentSession();
-        // const sess = await Session.sessionById(2);
+        const session = await Session.currentSession();
+        // const session = await Session.sessionById(2);
         // console.log(sess.id);
-        const logs = await sess.logs;
+        const logs = await session.logs;
+
+        console.log(session);
+        console.log(logs);
+
         return logs || emptyLog
       } catch (e) {
         console.log(e);
@@ -41,11 +43,11 @@ export default {
       return emptyLog
     },
     setting(parent, args, context) {
-      return {
-        set_point: 7,
-        set_point_tolerance: 5
-      }
-      // Setting.getLatestSetting();
+      // return {
+      //   set_point: 7,
+      //   set_point_tolerance: 5
+      // }
+      return Setting.getLatestSetting();
     },
   },
   Mutation: {

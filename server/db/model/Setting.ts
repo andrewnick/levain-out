@@ -6,10 +6,10 @@ export class Setting extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ default: 28 })
     set_point: number;
 
-    @Column()
+    @Column({ default: 5 })
     set_point_tolerance: number;
 
 
