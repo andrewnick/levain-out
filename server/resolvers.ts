@@ -30,12 +30,12 @@ export default {
         const session = await Session.currentSession();
         // const session = await Session.sessionById(2);
         // console.log(sess.id);
-        const logs = await session.logs;
+        // const logs = await Session.getLogs(session.id)
 
         console.log(session);
-        console.log(logs);
+        console.log(session.logs);
 
-        return logs || emptyLog
+        return session.logs || emptyLog
       } catch (e) {
         console.log(e);
       }

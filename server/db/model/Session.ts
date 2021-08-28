@@ -23,6 +23,15 @@ export class Session extends BaseEntity {
     @OneToMany(() => Log, log => log.session)
     logs: Log[];
 
+    static getLogs(id: number) {
+        let session = this.createQueryBuilder("session")
+            .where("session.id = :id ", { id: id })
+
+            .getOne();
+
+        return session
+    }
+
     static sessionById(id: number) {
         let session = this.createQueryBuilder("session")
             .where("session.id = :id ", { id: id })
@@ -41,11 +50,13 @@ export class Session extends BaseEntity {
         let session = this.createQueryBuilder("session")
             .where("session.status IN (:...status)", { status: ["started", "paused"] })
             .orderBy("session.id", "DESC")
+            .leftJoinAndSelect("session.logs", "log")
             .getOne();
 
         if (!session) {
             session = this.createQueryBuilder("session")
                 .orderBy("session.id", "DESC")
+                .leftJoinAndSelect("session.logs", "log")
                 .getOne();
         }
 

@@ -42,6 +42,7 @@ const SET_LED = `
 const GET_LOGS = `
   query {
     logs {
+      id
       created_at
       temperature
       humidity
@@ -122,7 +123,7 @@ const Home = () => {
                   {LogGraph}
                 </>
               )}
- 
+
               <RecordingControl recording={isRecording} isRecording={setIsRecording} />
             </Card>
           </div>

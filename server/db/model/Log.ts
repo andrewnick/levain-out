@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, Index, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Session } from './Session'
 
 @Entity()
@@ -6,6 +6,12 @@ export class Log extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 
     @Column("float")
     temperature: number;
@@ -22,6 +28,7 @@ export class Log extends BaseEntity {
     @Column({ default: 5 })
     set_point_tolerance: number;
 
+    @Index()
     @ManyToOne(() => Session, session => session.logs, { eager: true })
     session: Session;
 
