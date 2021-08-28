@@ -1,12 +1,22 @@
+import { DateTime } from "luxon";
 import React from "react";
+import { Log } from "../../../types/global";
 
 interface Info {
-  temperature?: number;
-  humidity?: number;
-  duration: string;
+  logs: Log[]
 }
 
-const Info = ({ temperature, humidity, duration }: Info) => {
+const Info = ({ logs }: Info) => {
+  const firstLog = logs[0];
+  const lastLog = logs[logs.length - 1];
+  const lastLogDate = DateTime.fromMillis(parseInt(lastLog.created_at))
+  const firstLogDate = DateTime.fromMillis(parseInt(firstLog.created_at))
+  const logTimeDifference = lastLogDate.diff(firstLogDate);
+
+  const temperature = parseFloat(lastLog.temperature)
+  const humidity = parseFloat(lastLog.humidity)
+  const duration = logTimeDifference.isValid ? logTimeDifference.toFormat("h:mm:ss") : null
+                    
   return (
     <form className="w-full max-w-lg mx-auto">
       <div className="flex flex-wrap -mx-3 mt-3">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { mutation } from "../../graphql/gqlClient";
 
 const START_RECORDING = `
@@ -18,11 +18,11 @@ const STOP_RECORDING = `
 `;
 
 interface RecordingControl {
-  isRecording: Function,
-  recording?: boolean;
+  recording: boolean;
+  setRecording: Dispatch<SetStateAction<boolean>>,
 }
 
-const RecordingControl = ({ isRecording, recording = false }: RecordingControl) => {
+const RecordingControl = ({ setRecording: isRecording, recording = false }: RecordingControl) => {
   return (
     <div>
       {recording ? (

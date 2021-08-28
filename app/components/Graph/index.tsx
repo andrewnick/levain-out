@@ -4,11 +4,11 @@ import {
   VictoryLine,
   VictoryAxis,
 } from "victory";
-import { LogType, PlotDataType } from "../../../types/global";
+import { Log, PlotDataType } from "../../../types/global";
 import Plot from "./Plot";
 
 interface Graph {
-  logs: LogType[]
+  logs: Log[]
 }
 
 const Graph = ({ logs }: Graph) => {
