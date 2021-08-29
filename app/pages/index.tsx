@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import Header from "../components/Header";
 import Info from "../components/Info";
 import Card from "../components/Card";
 import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query } from "../graphql/gqlClient";;
-import { LogType, Log, Setting } from "../../types/global";
+import {  Log, Setting, Session } from "../../types/global";
 import useSWR from "swr";
 
 const Graph = dynamic(() => import("../components/Graph"), {
@@ -18,7 +18,7 @@ const Graph = dynamic(() => import("../components/Graph"), {
 
 interface IndexServerSideProps {
   log: Log;
-  logs: Array<LogType>;
+  logs: Array<Log>;
   setting: Setting;
 }
 
@@ -50,53 +50,56 @@ const GET_LOGS = `
   }
 `;
 
+const GET_SESSION = `
+  query {
+    session {
+      id,
+      status,
+      logs {
+        created_at
+        temperature
+        humidity
+        switch
+      }
+    }
+  }
+`;
+
 // interface Home {
 //   // log: Log;
 //   // setting: Setting;
-//   // initialLogs: LogType[];
+//   // initialLogs: Log[];
+// }
+
+// const useRecordingState = (data) => {
+//   let isRecording = false;
+//   if (data?.session) {
+//     isRecording = data.session.status === 'started'
+
+//   }
+//   return useState(isRecording);
 // }
 
 const Home = () => {
-  const { data, error } = useSWR<{ logs: Array<LogType> }, boolean>(
-    GET_LOGS,
+  const { data, error } = useSWR<{ session: Session }, boolean>(
+    GET_SESSION,
     query,
     {
-      refreshInterval: 2000,
+      refreshInterval: 9000,
     }
   );
-  // const { data: {setting}, error: settingError } = useSWR<{ setting: Setting }, boolean>(
-  //   NAME_QUERY,
-  //   query,
-  // );
-  console.log(data);
 
-  const [isRecording, setIsRecording] = useState(false);
-
-  // useEffect(() => {
-  //   const setRecordingStatus = async () => {
-  //     const sess = await new Session().getCurrentSession();
-  //     setIsRecording(sess.status === 'started');
-  //   }
-  //   setRecordingStatus();
-  // }, [sess])
-
-  let LogGraph = <div>loading...</div>;
-  let lastLog = { temperature: "0", humidity: "0", created_at: "0" };
-  let firstLog = { temperature: "0", humidity: "0", created_at: "0" };
-  let logTimeDifference: Duration | null = null;
-  if (error) {
-    LogGraph = <div>failed to load</div>;
-  } else if (data) {
-    lastLog = data.logs[data.logs.length - 1];
-    firstLog = data.logs[0];
-    logTimeDifference = Duration.fromMillis(
-      parseInt(lastLog.created_at) - parseInt(firstLog.created_at)
-    );
-
-    LogGraph = <Graph logs={data.logs} />;
-    // LogGraph = <Graph logs={data.logs} firstLog={firstLog} lastLog={lastLog} />;
-  }
-
+  const [recording, setRecording] = useState(false);
+  useEffect(() => {
+    setRecording(data?.session?.status === 'started');
+  }, [data])
+  
+  if (error) return <div>failed to load</div>
+  if (!data) return <div>loading...</div>
+ 
+  const { session } = data
+  const { logs } = session
+  
   return (
     <div>
       <Head>
@@ -108,22 +111,13 @@ const Home = () => {
         <div className="flex flex-wrap">
           <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
-              {isRecording && (
+              {Boolean(logs.length) && recording && (
                 <>
-                  <Info
-                    temperature={parseFloat(lastLog.temperature)}
-                    humidity={parseFloat(lastLog.humidity)}
-                    duration={
-                      logTimeDifference
-                        ? logTimeDifference.toFormat("h:mm:ss")
-                        : null
-                    }
-                  />
-                  {LogGraph}
+                  <Info logs={logs} />
+                  {Boolean(logs.length) && <Graph logs={logs} />}
                 </>
               )}
-
-              <RecordingControl recording={isRecording} isRecording={setIsRecording} />
+              <RecordingControl recording={recording} setRecording={setRecording} />
             </Card>
           </div>
           {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
@@ -142,19 +136,5 @@ const Home = () => {
     </div>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const { log, setting, logs: initialLogs }: IndexServerSideProps = await query(
-//     NAME_QUERY
-//   );
-
-//   return {
-//     props: {
-//       // log,
-//       // initialLogs,
-//       setting,
-//     },
-//   };
-// };
 
 export default Home;
