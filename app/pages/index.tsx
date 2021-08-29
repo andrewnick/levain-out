@@ -42,7 +42,6 @@ const SET_LED = `
 const GET_LOGS = `
   query {
     logs {
-      id
       created_at
       temperature
       humidity

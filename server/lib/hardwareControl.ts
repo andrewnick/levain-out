@@ -27,7 +27,7 @@ const readSensor = async () => {
 
     const sess = await Session.currentSession();
 
-    const onOff: BinaryValue = temperature > 28 ? 1 : 0;
+    const onOff: BinaryValue = temperature < 28 ? 1 : 0;
 
     await switchOnOff(onOff);
 

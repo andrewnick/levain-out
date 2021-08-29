@@ -4,6 +4,7 @@ export default gql`
   type Query {
     log: Log!
     logs: [Log!]
+    session: Session!
     setting: Setting!
   }
   type Mutation {
@@ -42,5 +43,7 @@ export default gql`
   }
   type Session {
     id: Int
+    status: String
+    logs: [Log]
   }
 `;

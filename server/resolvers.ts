@@ -17,6 +17,12 @@ export default {
       }
       return null
     },
+    async session() {
+      const currentSession = await Session.currentSession();
+      console.log(currentSession);
+
+      return currentSession ?? await Session.lastSession()
+    },
     async logs(parent, args, context) {
       const emptyLog = [{
         id: 0,

@@ -4,7 +4,8 @@
   "description": "Build an App with Node.js, Express, and TypeScript",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.ts",
+    "dev": "nodemon app.ts",
+    "start": "ts-node app.ts",
     "typeorm": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' node --require ts-node/register node_modules/typeorm/cli.js",
     "db:create": "yarn run typeorm schema:sync -c default",
     "db:migrate": "yarn run typeorm migration:run -f ormconfig.json",

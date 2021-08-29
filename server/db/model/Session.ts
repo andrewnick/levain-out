@@ -47,19 +47,17 @@ export class Session extends BaseEntity {
     }
 
     static currentSession() {
-        let session = this.createQueryBuilder("session")
+        return this.createQueryBuilder("session")
             .where("session.status IN (:...status)", { status: ["started", "paused"] })
             .orderBy("session.id", "DESC")
             .leftJoinAndSelect("session.logs", "log")
             .getOne();
+    }
 
-        if (!session) {
-            session = this.createQueryBuilder("session")
-                .orderBy("session.id", "DESC")
-                .leftJoinAndSelect("session.logs", "log")
-                .getOne();
-        }
-
-        return session;
+    static lastSession() {
+        return this.createQueryBuilder("session")
+            .orderBy("session.id", "DESC")
+            .leftJoinAndSelect("session.logs", "log")
+            .getOne();
     }
 }
