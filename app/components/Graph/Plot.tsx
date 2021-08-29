@@ -3,6 +3,9 @@ import {
   VictoryLine,
   VictoryAxis
 } from "victory";
+import {
+  OrientationTypes
+} from "victory-core";
 import { PlotDataType } from "../../../types/global";
 
 const highestTickValue: (max: number, divisor: number) => number = (max, divisor) => {
@@ -34,8 +37,9 @@ const Plot: React.FC<{
   color: string,
   divisor: number,
   hideAxis?: boolean,
+  orient: OrientationTypes,
   other?: any
-}> = ({ data, label, color, divisor, hideAxis = false, ...other }) => {
+}> = ({ data, label, color, divisor, orient, hideAxis = false, ...other }) => {
 
   const max: number = Math.max(
     ...data.map((datum) => datum.y)
@@ -55,9 +59,9 @@ const Plot: React.FC<{
             axis: { stroke: color },
             tickLabels: { fill: color },
           }}
-          orientation="right"
           tickValues={tempTicks}
           tickFormat={(t) => t * upperValue}
+          orientation={orient}
         />
       }
       <VictoryLine

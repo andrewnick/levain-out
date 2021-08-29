@@ -86,7 +86,7 @@ const Home = () => {
     GET_SESSION,
     query,
     {
-      refreshInterval: 2000,
+      refreshInterval: 9000,
     }
   );
 

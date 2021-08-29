@@ -2,8 +2,12 @@ import React from "react";
 import {
   VictoryChart,
   VictoryLine,
-  VictoryAxis,
+  VictoryAxis
 } from "victory";
+import {
+  OrientationTypes,
+  Orientation
+} from "victory-core";
 import { Log, PlotDataType } from "../../../types/global";
 import Plot from "./Plot";
 
@@ -42,12 +46,14 @@ const Graph = ({ logs }: Graph) => {
           divisor={5}
           color="#f56565"
           label="Temp"
+          orient={'right'}
         />
         <Plot
           data={humidityData}
           divisor={10}
           color="#3574ca"
           label="Humidity"
+          orient={'left'}
         />
         <Plot
           data={lampData}
@@ -55,6 +61,7 @@ const Graph = ({ logs }: Graph) => {
           color="rgba(53,116, 202, 0.3)"
           label="Lamp"
           hideAxis={true}
+          orient={'right'}
         />
 
         {/* Hack to display the VictoryLines within Plot */}
