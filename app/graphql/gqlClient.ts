@@ -7,6 +7,8 @@ import { GraphQLClient } from "graphql-request";
 //   ? window.location.origin
 //   : `${host}://localhost:${port}`;
 const origin: string = `${process.env.NEXT_PUBLIC_SERVER_URL}:${process.env.NEXT_PUBLIC_SERVER_PORT}`;
+console.log(process.env.NEXT_PUBLIC_SERVER_PORT);
+console.log(origin);
 
 const API: string = `${origin}/graphql`;
 

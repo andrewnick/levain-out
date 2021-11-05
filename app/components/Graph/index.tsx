@@ -4,10 +4,6 @@ import {
   VictoryLine,
   VictoryAxis
 } from "victory";
-import {
-  OrientationTypes,
-  Orientation
-} from "victory-core";
 import { Log, PlotDataType } from "../../../types/global";
 import Plot from "./Plot";
 
