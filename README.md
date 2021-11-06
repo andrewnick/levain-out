@@ -1,7 +1,10 @@
 ## PI install
 
-* Run
+* Development
     - `sudo yarn dev`
+
+* Production
+    - `sudo yarn start`
 
 * Postgres - https://opensource.com/article/17/10/set-postgres-database-your-raspberry-pi
 
