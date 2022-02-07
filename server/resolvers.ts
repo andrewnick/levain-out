@@ -19,8 +19,8 @@ export default {
     },
     async session() {
       const currentSession = await Session.currentSession();
-      console.log(currentSession);
-
+      // console.log(currentSession);
+      // throw new Error("Error")
       return currentSession ?? await Session.lastSession()
     },
     async logs(parent, args, context) {
@@ -37,7 +37,6 @@ export default {
         // const session = await Session.sessionById(2);
         // console.log(sess.id);
         // const logs = await Session.getLogs(session.id)
-
         console.log(session);
         console.log(session.logs);
 

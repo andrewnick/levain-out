@@ -8,6 +8,8 @@ function terminate(server: ApolloServer<ExpressContext>, options = { coredump: f
     }
 
     return (code, reason) => (err, promise) => {
+        console.log({ err, code, reason });
+
         if (err && err instanceof Error) {
             // Log error information, use a proper logging library here :)
             // console.log(err.message, err.stack)

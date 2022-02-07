@@ -5,6 +5,7 @@ import { Gpio, BinaryValue } from "onoff";
 import { randomInt } from "./random";
 import isMac from "./isMac";
 import { DhtSensorPromises } from "server/node-dht-sensor";
+import * as Sentry from '@sentry/node';
 
 const sw: Gpio | null = isMac() ? null : new Gpio(21, "out");
 const sensor: DhtSensorPromises | null = isMac() ? null : dhtSensor.promises;
@@ -44,7 +45,7 @@ const readSensor = async () => {
     return reading;
   } catch (e) {
     console.log('Error reading Sensor', e);
-
+    Sentry.captureException(e);
   }
 
   return

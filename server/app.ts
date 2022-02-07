@@ -118,9 +118,9 @@ const startApolloServer = async () => {
     introspection: true,
   });
 
+  await server.start();
   server.applyMiddleware({ app });
 
-  await server.start();
 
   await new Promise(resolve => httpServer.listen({ port: config.port }, resolve));
   console.log(
@@ -133,22 +133,22 @@ const startApolloServer = async () => {
 
 
 const setUp = async () => {
-  try {
-    typeorm();
-    const { server } = await startApolloServer()
+  // try {
+  typeorm();
+  const { server } = await startApolloServer()
 
-    const exitHandler = terminate(server, {
-      coredump: false,
-      timeout: 500
-    })
+  const exitHandler = terminate(server, {
+    coredump: false,
+    timeout: 500
+  })
 
-    process.on('uncaughtException', exitHandler(1, 'Unexpected Error'))
-    process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'))
-    process.on('SIGTERM', exitHandler(0, 'SIGTERM'))
-    process.on('SIGINT', exitHandler(0, 'SIGINT'))
-  } catch (e) {
-    throw Error('DB connection not initialised');
-  }
+  process.on('uncaughtException', exitHandler(1, 'Unexpected Error'))
+  process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'))
+  process.on('SIGTERM', exitHandler(0, 'SIGTERM'))
+  process.on('SIGINT', exitHandler(0, 'SIGINT'))
+  // } catch (e) {
+  //   throw Error('DB connection not initialised');
+  // }
 }
 
 setUp()
