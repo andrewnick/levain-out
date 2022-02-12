@@ -4,6 +4,7 @@ export default gql`
   type Query {
     log: Log!
     logs: [Log!]
+    paginatedLogs(limit: Int,  cursor: InputCursor, order: String): PaginatedLogs!   
     session: Session!
     setting: Setting!
   }
@@ -41,9 +42,21 @@ export default gql`
   type Led {
     status: String
   }
+  type Cursor {
+    beforeCursor: String
+    afterCursor: String
+  }
+  input InputCursor {
+    beforeCursor: String
+    afterCursor: String
+  }
   type Session {
     id: Int
     status: String
+    logs: [Log]
+  }
+  type PaginatedLogs {
+    cursor: Cursor
     logs: [Log]
   }
 `;

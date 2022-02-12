@@ -4,6 +4,7 @@ import { Setting } from "./db/model/Setting";
 import { Session, StatusType } from "./db/model/Session";
 import readSensor, { switchOnOff } from "./lib/hardwareControl";
 import { buildPaginator } from 'typeorm-cursor-pagination';
+import { getConnection } from "typeorm";
 
 let readSensorInterval;
 
@@ -22,6 +23,35 @@ export default {
       const currentSession = await Session.currentSession();
       return currentSession ?? await Session.lastSession()
     },
+    async paginatedLogs(parent, args, context) {
+      const { limit = 10, order = 'ASC', cursor: inputCursor } = args
+      console.log({ inputCursor });
+
+      // try {
+      const session = await Session.currentSession();
+      const queryBuilder = getConnection()
+        .getRepository(Log)
+        .createQueryBuilder('log')
+        .where("log.sessionId = :sessionId", { sessionId: session.id });
+
+      const paginator = buildPaginator({
+        entity: Log,
+        paginationKeys: ['id'],
+        query: {
+          limit,
+          order,
+          afterCursor: inputCursor.afterCursor,
+          beforeCursor: inputCursor.beforeCursor
+        },
+      });
+
+      const { data: logs, cursor } = await paginator.paginate(queryBuilder);
+
+      return {
+        logs,
+        cursor
+      }
+    },
     async logs(parent, args, context) {
       const emptyLog = [{
         id: 0,
@@ -35,15 +65,6 @@ export default {
         const session = await Session.currentSession();
         console.log(session);
         console.log(session.logs);
-
-        const paginator = buildPaginator({
-          entity: Log,
-          paginationKeys: ['id'],
-          query: {
-            limit: 10,
-            order: 'ASC',
-          },
-        });
 
         return session.logs || emptyLog
       } catch (e) {
