@@ -10,7 +10,8 @@ import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
 import { query } from "../graphql/gqlClient";;
 import {  Log, Setting, Session } from "../../types/global";
-import useSWR from "swr";
+import useSWR, { useSWRInfinite } from "swr";
+// import { SWRInfiniteKeyLoader } from 'swr/infinite'
 
 const Graph = dynamic(() => import("../components/Graph"), {
   ssr: false,
@@ -65,6 +66,28 @@ const GET_SESSION = `
   }
 `;
 
+function createPaginatedLogsQuery ({limit = 10, cursor: {afterCursor = null, beforeCursor = null}}: {limit?: number, cursor: {afterCursor?: string | null, beforeCursor?: string | null}}) {
+  console.log({limit, afterCursor, beforeCursor});
+  
+  return `query paginatedLogs($cursor: InputCursor) {
+            paginatedLogs(limit: ${limit}, cursor: {
+              beforeCursor: ${beforeCursor},
+              afterCursor: ${afterCursor},
+            }) {
+              cursor {
+                afterCursor
+                beforeCursor
+              }
+              logs {
+                created_at
+                temperature
+                humidity
+                switch
+              }
+            }
+          }`
+}
+
 // interface Home {
 //   // log: Log;
 //   // setting: Setting;
@@ -80,25 +103,41 @@ const GET_SESSION = `
 //   return useState(isRecording);
 // }
 
-const Home = () => {
-  const { data, error } = useSWR<{ session: Session }, boolean>(
-    GET_SESSION,
-    query,
-    {
-      refreshInterval: 9000,
-    }
-  );
 
-  const [recording, setRecording] = useState(false);
-  useEffect(() => {
-    setRecording(data?.session?.status === 'started');
-  }, [data])
+const getKey = (pageIndex, previousPageData) => {
+  console.log('getKey');
   
-  if (error) return <div>failed to load</div>
-  if (!data) return <div>loading...</div>
+  console.log({ pageIndex });
+  console.log({ previousPageData });
+  const query = createPaginatedLogsQuery({limit: 10, cursor: {afterCursor: previousPageData.cursor.afterCursor}})
+    console.log({query});
+
+  // if (previousPageData?.cursor?.afterCursor == null) return null
+  return query
+}
+
+const Home = () => {
+  // const { data, error } = useSWR<{ session: Session }, boolean>(
+  //   GET_SESSION,
+  //   query,
+  //   {
+  //     refreshInterval: 9000,
+  //   }
+  // );
+
+  const { data, error, isValidating, mutate, size, setSize } = useSWRInfinite(getKey, query)
+
+  // const [recording, setRecording] = useState(false);
+  // useEffect(() => {
+  //   setRecording(data?.session?.status === 'started');
+  // }, [data])
+  
+  // if (error) return <div>failed to load</div>
+  // if (!data) return <div>loading...</div>
  
-  const { session } = data
-  const { logs } = session
+  // const { session } = data
+  // const { logs } = session
+  console.log({ data, error, isValidating, mutate, size, setSize });
   
   return (
     <div>
@@ -109,7 +148,7 @@ const Home = () => {
       <Header />
       <main className="container mx-auto">
         <div className="flex flex-wrap">
-          <div className="flex-initial w-100 min-w-full mb-8">
+          {/* <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
               {Boolean(logs.length) && recording && (
                 <>
@@ -119,7 +158,7 @@ const Home = () => {
               )}
               <RecordingControl recording={recording} setRecording={setRecording} />
             </Card>
-          </div>
+          </div> */}
           {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
             <Card>
               <h3>Manual override</h3>
