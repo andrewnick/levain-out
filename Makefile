@@ -14,5 +14,7 @@ server-live:
 
 app-dev:
 	cd app && yarn dev
+app-build:
+	cd app && yarn build
 app-live:
 	cd app && yarn start	
