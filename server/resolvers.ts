@@ -24,15 +24,14 @@ export default {
       return currentSession ?? await Session.lastSession()
     },
     async paginatedLogs(parent, args, context) {
-      const { limit = 10, order = 'ASC', cursor: inputCursor } = args
+      const { sessionId, limit = 10, order = 'ASC', cursor: inputCursor } = args
       console.log({ inputCursor });
 
       // try {
-      const session = await Session.currentSession();
       const queryBuilder = getConnection()
         .getRepository(Log)
         .createQueryBuilder('log')
-        .where("log.sessionId = :sessionId", { sessionId: session.id });
+        .where("log.sessionId = :sessionId", { sessionId });
 
       const paginator = buildPaginator({
         entity: Log,

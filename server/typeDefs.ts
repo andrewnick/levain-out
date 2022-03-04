@@ -4,7 +4,7 @@ export default gql`
   type Query {
     log: Log!
     logs: [Log!]
-    paginatedLogs(limit: Int,  cursor: InputCursor, order: String): PaginatedLogs!   
+    paginatedLogs(sessionId: Int, limit: Int,  cursor: InputCursor, order: String): PaginatedLogs!   
     session: Session!
     setting: Setting!
   }
