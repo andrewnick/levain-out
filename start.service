@@ -1,0 +1,13 @@
+[Unit]
+Description=Levain Out
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/Sites/levain-out
+ExecStart=make server-live
+Restart=on-failure
+User=pi
+Environment=PORT=443
+
+[Install]
+WantedBy=multi-user.target
