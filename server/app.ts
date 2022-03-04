@@ -16,6 +16,9 @@ const typeorm = async () => {
   return await createTypeormConn();
 }
 
+console.log("Starting levain-out");
+
+
 
 Sentry.init({
   dsn: "https://a66a666d33214c0d8c8e0b26e8596d1e@o1061411.ingest.sentry.io/6051751",

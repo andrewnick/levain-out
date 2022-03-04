@@ -44,3 +44,15 @@ yarn dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+
+## Setting up a service on the pi
+From https://simonprickett.dev/writing-a-systemd-service-in-node-js-pi/
+
+1. Create a service file e.g. levain-out.service
+2. Run `sudo cp levain-out.service /etc/systemd/system`
+3. Run `sudo systemctl enable levain-out.service` (this tells systemctl to enable on boot)
+
+*Other useful commands:*
+* Manually start a service: `sudo systemctl start levain-out.service`
+* Reboot the pi: `sudo reboot`
+* View logs for this service: `journalctl -u levain-out` or `journalctl -u levain-out -f` to tail the log
