@@ -55,24 +55,20 @@ const GET_SESSION = `
   query {
     session {
       id,
-      status,
-      logs {
-        created_at
-        temperature
-        humidity
-        switch
-      }
+      status
     }
   }
 `;
 
-function createPaginatedLogsQuery ({limit = 10, cursor: {afterCursor = null, beforeCursor = null}}: {limit?: number, cursor: {afterCursor?: string | null, beforeCursor?: string | null}}) {
+function createPaginatedLogsQuery ({limit = 10, afterCursor = null, beforeCursor = null}: {limit?: number, afterCursor?: string | null, beforeCursor?: string | null }) {
   console.log({limit, afterCursor, beforeCursor});
-  
-  return `query paginatedLogs($cursor: InputCursor) {
+
+  const afC = afterCursor ? `"${afterCursor}"` : null
+
+  return `query {
             paginatedLogs(limit: ${limit}, cursor: {
               beforeCursor: ${beforeCursor},
-              afterCursor: ${afterCursor},
+              afterCursor: ${afC},
             }) {
               cursor {
                 afterCursor
@@ -109,10 +105,16 @@ const getKey = (pageIndex, previousPageData) => {
   
   console.log({ pageIndex });
   console.log({ previousPageData });
-  const query = createPaginatedLogsQuery({limit: 10, cursor: {afterCursor: previousPageData.cursor.afterCursor}})
-    console.log({query});
+  // if (previousPageData?.paginatedLogs?.cursor?.afterCursor == null) return null
 
-  // if (previousPageData?.cursor?.afterCursor == null) return null
+  const afterCursor  = previousPageData?.paginatedLogs?.cursor?.afterCursor ?? null
+  // if (previousPageData.paginatedLogs?.cursor?.afterCursor == null) return createPaginatedLogsQuery({})
+  console.log({ afterCursor });
+
+  const query = createPaginatedLogsQuery({ afterCursor })
+  // const query = createPaginatedLogsQuery({})
+  // console.log({query});
+
   return query
 }
 
@@ -124,8 +126,9 @@ const Home = () => {
   //     refreshInterval: 9000,
   //   }
   // );
+console.log(createPaginatedLogsQuery({}));
 
-  const { data, error, isValidating, mutate, size, setSize } = useSWRInfinite(getKey, query)
+  const { data, error, isValidating, mutate, size, setSize } = useSWRInfinite(getKey, query, { persistSize: false })
 
   // const [recording, setRecording] = useState(false);
   // useEffect(() => {
@@ -138,7 +141,15 @@ const Home = () => {
   // const { session } = data
   // const { logs } = session
   console.log({ data, error, isValidating, mutate, size, setSize });
+  useEffect(() => {
+    const timer = setTimeout(() => setSize(10), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const logs = data && data.flatMap(value => value.paginatedLogs.logs);
+  console.log({logs});
   
+
   return (
     <div>
       <Head>
@@ -148,17 +159,17 @@ const Home = () => {
       <Header />
       <main className="container mx-auto">
         <div className="flex flex-wrap">
-          {/* <div className="flex-initial w-100 min-w-full mb-8">
+          <div className="flex-initial w-100 min-w-full mb-8">
             <Card>
-              {Boolean(logs.length) && recording && (
+              {Boolean(logs?.length) &&  (
                 <>
                   <Info logs={logs} />
-                  {Boolean(logs.length) && <Graph logs={logs} />}
+                  {Boolean(logs?.length) && <Graph logs={logs} />}
                 </>
               )}
-              <RecordingControl recording={recording} setRecording={setRecording} />
+              {/* <RecordingControl recording={recording} setRecording={setRecording} /> */}
             </Card>
-          </div> */}
+          </div>
           {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
             <Card>
               <h3>Manual override</h3>
