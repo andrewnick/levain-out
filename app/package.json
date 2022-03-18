@@ -20,6 +20,7 @@
     "graphql-request": "1.8.2",
     "graphql-subscriptions": "1.1.0",
     "luxon": "1.25.0",
+    "msw": "0.39.2",
     "next": "11.0.1",
     "next-apollo": "3.1.10",
     "onoff": "6.0.0",
@@ -37,5 +38,8 @@
     "@types/react": "16.9.44",
     "babel-plugin-transform-typescript-metadata": "0.3.2",
     "typescript": "3.9.7"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

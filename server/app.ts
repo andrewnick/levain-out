@@ -1,24 +1,23 @@
-import express from 'express'
-import { ApolloServer } from 'apollo-server-express'
-import { ApolloServerPlugin } from 'apollo-server-plugin-base'
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
-import fs from 'fs';
-import https from 'https';
-import http from 'http';
-import typeDefs from './typeDefs'
-import resolvers from './resolvers'
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPlugin } from "apollo-server-plugin-base";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import fs from "fs";
+import https from "https";
+import http from "http";
+import typeDefs from "./typeDefs";
+import resolvers from "./resolvers";
 import { createTypeormConn } from "./lib/createTypeormConn";
-import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
-import terminate from './lib/logging/terminate';
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
+import terminate from "./lib/logging/terminate";
+import { server } from "./mocks/server";
 
 const typeorm = async () => {
   return await createTypeormConn();
-}
+};
 
 console.log("Starting levain-out");
-
-
 
 Sentry.init({
   dsn: "https://a66a666d33214c0d8c8e0b26e8596d1e@o1061411.ingest.sentry.io/6051751",
@@ -59,12 +58,13 @@ const apolloServerSentryPlugin: ApolloServerPlugin = {
           }
 
           scope.setTags({
-            graphql: rc.operation?.operation || 'parse_err',
-            graphqlName: (rc.operationName as any) || (rc.request.operationName as any),
+            graphql: rc.operation?.operation || "parse_err",
+            graphqlName:
+              (rc.operationName as any) || (rc.request.operationName as any),
           });
 
           rc.errors.forEach((error) => {
-            if (error.path || error.name !== 'GraphQLError') {
+            if (error.path || error.name !== "GraphQLError") {
               scope.setExtras({
                 path: error.path,
               });
@@ -85,15 +85,14 @@ const apolloServerSentryPlugin: ApolloServerPlugin = {
 //   name: "My First Test Transaction",
 // });
 
-
 const startApolloServer = async () => {
   const configurations = {
     // Note: You may need sudo to run on port 443
-    production: { ssl: true, port: 443, hostname: 'raspberrypi.local' },
-    development: { ssl: true, port: 443, hostname: 'raspberrypi.local' },
+    production: { ssl: true, port: 443, hostname: "raspberrypi.local" },
+    development: { ssl: true, port: 443, hostname: "raspberrypi.local" },
   };
 
-  const environment = process.env.NODE_ENV || 'production';
+  const environment = process.env.NODE_ENV || "production";
   const config = configurations[environment];
   let httpServer;
   const app = express();
@@ -105,9 +104,9 @@ const startApolloServer = async () => {
     httpServer = https.createServer(
       {
         key: fs.readFileSync(`/home/pi/.ssl/express.key`),
-        cert: fs.readFileSync(`/home/pi/.ssl/express.crt`)
+        cert: fs.readFileSync(`/home/pi/.ssl/express.crt`),
       },
-      app,
+      app
     );
   } else {
     httpServer = http.createServer(app);
@@ -116,7 +115,10 @@ const startApolloServer = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    plugins: [apolloServerSentryPlugin, ApolloServerPluginDrainHttpServer({ httpServer })],
+    plugins: [
+      apolloServerSentryPlugin,
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+    ],
     context: ({ req }) => ({ req }), // important to pass req to context (it is used in `rc.context.req`)
     introspection: true,
   });
@@ -124,40 +126,36 @@ const startApolloServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
 
-
-  await new Promise(resolve => httpServer.listen({ port: config.port }, resolve));
+  await new Promise((resolve) =>
+    httpServer.listen({ port: config.port }, resolve)
+  );
   console.log(
-    '🚀 Server ready at',
-    `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${server.graphqlPath}`
+    "🚀 Server ready at",
+    `http${config.ssl ? "s" : ""}://${config.hostname}:${config.port}${
+      server.graphqlPath
+    }`
   );
 
   return { server, app };
-}
-
+};
 
 const setUp = async () => {
   // try {
   typeorm();
-  const { server } = await startApolloServer()
+  const { server } = await startApolloServer();
 
   const exitHandler = terminate(server, {
     coredump: false,
-    timeout: 500
-  })
+    timeout: 500,
+  });
 
-  process.on('uncaughtException', exitHandler(1, 'Unexpected Error'))
-  process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'))
-  process.on('SIGTERM', exitHandler(0, 'SIGTERM'))
-  process.on('SIGINT', exitHandler(0, 'SIGINT'))
+  process.on("uncaughtException", exitHandler(1, "Unexpected Error"));
+  process.on("unhandledRejection", exitHandler(1, "Unhandled Promise"));
+  process.on("SIGTERM", exitHandler(0, "SIGTERM"));
+  process.on("SIGINT", exitHandler(0, "SIGINT"));
   // } catch (e) {
   //   throw Error('DB connection not initialised');
   // }
-}
+};
 
-setUp()
-
-
-
-
-
-
+setUp();

@@ -8,8 +8,8 @@ import Info from "../components/Info";
 import Card from "../components/Card";
 import SetTemp from "../components/SetTemp";
 import RecordingControl from "../components/RecordingControl";
-import { query } from "../graphql/gqlClient";;
-import {  Log, Setting, Session } from "../../types/global";
+import { query } from "../graphql/gqlClient";
+import { Log, Setting, Session } from "../../types/global";
 import useSWR from "swr";
 
 const Graph = dynamic(() => import("../components/Graph"), {
@@ -51,10 +51,10 @@ const GET_LOGS = `
 `;
 
 const GET_SESSION = `
-  query {
+  query getSession {
     session {
-      id,
-      status,
+      id
+      status
       logs {
         created_at
         temperature
@@ -83,23 +83,24 @@ const GET_SESSION = `
 const Home = () => {
   const { data, error } = useSWR<{ session: Session }, boolean>(
     GET_SESSION,
-    query,
-    {
-      refreshInterval: 9000,
-    }
+    query
+    // {
+    //   refreshInterval: 9000,
+    // }
   );
 
   const [recording, setRecording] = useState(false);
   useEffect(() => {
-    setRecording(data?.session?.status === 'started');
-  }, [data])
-  
-  if (error) return <div>failed to load</div>
-  if (!data) return <div>loading...</div>
- 
-  const { session } = data
-  const { logs } = session
-  
+    setRecording(data?.session?.status === "started");
+  }, [data]);
+
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
+
+  const { session } = data;
+  const { logs } = session;
+  console.log(session);
+
   return (
     <div>
       <Head>
@@ -117,7 +118,10 @@ const Home = () => {
                   {Boolean(logs.length) && <Graph logs={logs} />}
                 </>
               )}
-              <RecordingControl recording={recording} setRecording={setRecording} />
+              {/* <RecordingControl
+                recording={recording}
+                setRecording={setRecording}
+              /> */}
             </Card>
           </div>
           {/* <div className="flex-initial w-full sm:w-1/2 mb-8 sm:pr-4">
